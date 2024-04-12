@@ -13,11 +13,9 @@ import java.util.*;
  * using List, HashMap//
  */
 public class TrainingDAO {
-     static int ID =1;
      public static HashMap<Training, User> trainingMap =new HashMap<>();
      public static List<String> trainingType = new ArrayList<>();
      Scanner scanner = new Scanner(System.in);
-
     public TrainingDAO() {
     }
     /**
@@ -44,31 +42,13 @@ public class TrainingDAO {
      * @param user data of user
      * @return HashMap
      */
-    public  HashMap<Training, User> addTraining(User user)  {
+    public  HashMap<Training, User> addTraining(User user,int ID,int time,int calorie,int day,int month,int year,Extra extra)  {
         System.out.println("Введите название типа тренировки из списка");
         System.out.println(trainingType);
         String name = scanner.nextLine();
         if (trainingType.contains(name)){
-            System.out.println("Введите длительность в минутах");
-            int time = Integer.parseInt(scanner.nextLine());
-            System.out.println("Введите количество сженных калорий");
-            int calorie = Integer.parseInt(scanner.nextLine());
-            System.out.println("Введите дату");
-            System.out.println("пример 10/04/1995");
-            String[] input = scanner.nextLine().split("/");
-            int day = Integer.parseInt(input[0]);
-            int month = Integer.parseInt(input[1]);
-            int year = Integer.parseInt(input[2]);
-            System.out.println("Добавьте дополнительную информацию");
-            String extraName = scanner.nextLine();
-            System.out.println("Введите значение");
-            int extraValue = Integer.parseInt(scanner.nextLine());
-            Extra extra= new Extra();
-            extra.setName(extraName);
-            extra.setValue(extraValue);
             Training training2 = new Training(ID,name, time, calorie, LocalDate.of(year, month, day),extra);
             trainingMap.put(training2,user);
-            ID++;
             return trainingMap;
             }
         else {System.out.println("такого нет");
