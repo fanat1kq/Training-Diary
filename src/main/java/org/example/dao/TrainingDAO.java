@@ -1,5 +1,6 @@
 package org.example.dao;
 
+import org.example.exception.TypeTrainingNotFoundException;
 import org.example.models.Extra;
 import org.example.models.Training;
 import org.example.models.User;
@@ -56,10 +57,10 @@ public class TrainingDAO {
             trainingMap.put(training2,user);
             return trainingMap;
             }
-        else {System.out.println("такого нет");
+        else throw new TypeTrainingNotFoundException("Такого типа тренировки нет");
         }
-        return null;
-    }
+
+
     /**
      * get static of using calories meantime training
      * @return int
@@ -109,5 +110,6 @@ public class TrainingDAO {
                 return true;
             }
         }
-    return false;}
+    return false;
+    }
 }

@@ -1,5 +1,7 @@
 package org.example.dao;
 
+import org.example.exception.AuthorizeException;
+import org.example.exception.RegisterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.example.in.AppConsole;
@@ -32,7 +34,7 @@ public class UserDAO {
                     System.out.println("Права доступа - " + map.get(user));
                     AppConsole appConsole= new AppConsole();
                     appConsole.AppLoop(user,map.get(user));
-                } else System.out.println("такого пользователя нет либо неправильный пароль, попробуйте еще раз");
+                } else throw new AuthorizeException("Такого пользователя нет либо неправильный пароль, попробуйте еще раз");
             }
             return true;
         }
@@ -49,13 +51,13 @@ public class UserDAO {
             if (user.getName().length()>0 && user.getPassword().length()>0 && user.getPassword() != null &&
                     !user.getName().equals(null)){
                 if (map.containsKey(user)) {
-                    System.out.println(user.getName() + " уже существует, создайте другого");
+                    throw new RegisterException("Такой пользователь уже существует, попробуйте другого");
                 } else {
                     map.put(user, role);
                     AppConsole appConsole= new AppConsole();
                     appConsole.startApp();
                 }
-            } else {System.out.println("Некорректное значение! Введите логин и пароль через пробел:");}
+            } else throw new RegisterException("Некорректное значение! Введите логин и пароль через пробел:");
         }
 }
 
