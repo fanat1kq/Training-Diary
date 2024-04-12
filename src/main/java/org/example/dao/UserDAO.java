@@ -17,8 +17,10 @@ public class UserDAO {
     /**
      * login
      *
-     * @return
+     * @return boolean
      * @throws ParseException
+     * @param name name of user
+     * @param password password of user
      */
     public boolean login(String name, String password) throws ParseException {
         log.info("The player trying to log in with login " + name + " and password " + password);
@@ -41,6 +43,9 @@ public class UserDAO {
     /**
      * create user
      * @exception ParseException
+     * @param name name of user
+     * @param password password of user
+     * @param role1 role of user
      */
     public  void createUser(String name, String password, String role1) throws ParseException {
 
