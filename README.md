@@ -41,3 +41,5 @@ Java core
 JUnit
 
 Maven
+
+Lombok
