@@ -1,5 +1,7 @@
 package org.example.dao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.example.in.AppConsole;
 import org.example.models.User;
 import org.example.models.enumerates.Role;
@@ -7,7 +9,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 
 public class UserDAO {
-
+    private static final Logger log = LoggerFactory.getLogger(UserDAO.class);
     static HashMap<User, Role> map=new HashMap<>();
     static User user=new User();
     /**
@@ -17,7 +19,7 @@ public class UserDAO {
      * @throws ParseException
      */
     public boolean login(String name, String password) throws ParseException {
-
+        log.info("The player trying to log in with login " + name + " and password " + password);
             if (map.isEmpty()){
                 System.out.println("Сначала создайте пользователя!");
                 AppConsole appConsole= new AppConsole();
@@ -39,6 +41,8 @@ public class UserDAO {
      * @exception ParseException
      */
     public  void createUser(String name, String password, String role1) throws ParseException {
+
+        log.info("The player trying to register with login " + name + " and password " + password);
             user.setName(name);
             user.setPassword(password);
             Role role = Role.valueOf(role1);
