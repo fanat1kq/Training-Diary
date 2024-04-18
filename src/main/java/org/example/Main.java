@@ -1,8 +1,6 @@
 package org.example;
 
-import org.example.dao.TrainingDAO;
 import org.example.in.AppConsole;
-
 import java.text.ParseException;
 
 /**
@@ -11,9 +9,8 @@ import java.text.ParseException;
 
 public class Main {
     public static void main(String[] args) throws ParseException {
-            TrainingDAO trainingDAO = new TrainingDAO();
-            trainingDAO.defalt();
             AppConsole appConsole = new AppConsole();
+            appConsole.defaultValues();
             appConsole.startApp();
     }
 }

@@ -3,13 +3,13 @@ package org.example.exception;
 /**
  * The type Type training already exists exception.
  */
-public class TypeTrainingNotFoundException extends RuntimeException {
+public class NotFoundException extends RuntimeException {
     /**
      * Instantiates a new Type training already exists exception.
      *
      * @param message the message
      */
-    public TypeTrainingNotFoundException(String message) {
+    public NotFoundException(String message) {
         super(message);
     }
 }
