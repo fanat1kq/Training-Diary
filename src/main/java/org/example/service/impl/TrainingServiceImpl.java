@@ -21,7 +21,7 @@ public class TrainingServiceImpl implements TrainingService {
         if (role.equals(Role.ADMIN)) {
             return trainingDAO.findAll();
         }
-        return trainingDAO.findAllByPlayerId(userId);
+        return trainingDAO.findAllByUserId(userId);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
-    public void updateTraining(User newUser, Training newTraining) {
-        trainingDAO.updateTraining(newUser,newTraining);
+    public Training updateTraining(User newUser, Training newTraining) {
+        return trainingDAO.updateTraining(newUser,newTraining);
     }
 }

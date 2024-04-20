@@ -14,5 +14,5 @@ public interface TrainingService {
     void defaultType();
     void deleteTraining(int id);
 
-    void updateTraining(User newUser,Training newTraining);
+    Training updateTraining(User newUser, Training newTraining);
 }

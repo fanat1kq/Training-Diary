@@ -64,8 +64,8 @@ public class MainController {
     }
 
 
-    public void updateTraining(User newUser, Training newTraining) {
+    public Training updateTraining(User newUser, Training newTraining) {
         log.info("The user "+ newUser.getLogin() +" update training");
-        trainingService.updateTraining(newUser,newTraining);
+        return trainingService.updateTraining(newUser,newTraining);
     }
 }

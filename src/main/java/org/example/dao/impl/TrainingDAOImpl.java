@@ -16,10 +16,8 @@ import java.util.*;
 
 public class TrainingDAOImpl implements TrainingDAO {
     private static int ID = 1;
-    //     private final static Map<Training, User> trainingMap =new TreeMap<>();
     private final Map<Integer, Training> trainings = new HashMap<>();
     public static List<String> trainingType=new ArrayList<>();
-    private int id = 1;
 
     public TrainingDAOImpl() {
     }
@@ -113,7 +111,7 @@ public class TrainingDAOImpl implements TrainingDAO {
             if (key == id) {
                 trainings.remove(key);
             }
-        }
+        };
     }
 
     /**
@@ -136,24 +134,17 @@ public class TrainingDAOImpl implements TrainingDAO {
     }
 
     @Override
-    public void updateTraining(User newUser, Training newTraining) {
+    public Training updateTraining(User newUser, Training newTraining) {
         for (Map.Entry<Integer, Training> entry : trainings.entrySet()) {
             if (entry.getValue().getId() == newTraining.getId()) {
                 trainings.put(newTraining.getId(), newTraining);
                 break;
             } else throw new NotFoundException("Такой тренировки нет");
         }
-
+        return trainings.get(newTraining.getId());
     }
-
     @Override
-    public Optional<Training> findById(int id) {
-        Training training = trainings.get(id);
-        return training == null ? Optional.empty() : Optional.of(training);
-    }
-
-    @Override
-    public List<Training> findAllByPlayerId(int userId) {
+    public List<Training> findAllByUserId(int userId) {
         List<Training> result = new ArrayList<>();
 
         for (Training training : trainings.values()) {
