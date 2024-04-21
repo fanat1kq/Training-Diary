@@ -1,10 +1,13 @@
 package org.example.controller;
 
 import org.example.exception.NotValidParametrException;
+import org.example.model.Extra;
 import org.example.model.Training;
+import org.example.model.Type;
 import org.example.model.User;
 import org.example.service.TrainingService;
 import org.example.service.SecurityService;
+import org.example.service.TypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,11 +18,14 @@ public class MainController {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
     private final TrainingService trainingService;
     private final SecurityService securityService;
+    private final TypeService typeService;
 
-    public MainController(TrainingService trainingService, SecurityService securityService) {
+    public MainController(TrainingService trainingService, SecurityService securityService, TypeService typeService) {
         this.trainingService = trainingService;
         this.securityService = securityService;
+        this.typeService = typeService;
     }
+
 
     public List<Training> getTraining(User user){
         log.info("The user with login " + user.getLogin() + " showing his training history");
@@ -33,7 +39,7 @@ public class MainController {
         log.info("The user see calories for 3 month");
         return trainingService.getStatistic();
     }
-    public List <String> addType(String type){
+    public Type addType(Type type){
         log.info("The user add new type training");
         return trainingService.addType(type);
     }
@@ -67,5 +73,14 @@ public class MainController {
     public Training updateTraining(User newUser, Training newTraining) {
         log.info("The user "+ newUser.getLogin() +" update training");
         return trainingService.updateTraining(newUser,newTraining);
+    }
+
+    public Extra addExtra(Extra extra) {
+        log.info("The user add new extra information of training");
+        return trainingService.addExtra(extra);
+    }
+
+    public int getTypeId(String type) {
+        return typeService.getTypeId(type);
     }
 }

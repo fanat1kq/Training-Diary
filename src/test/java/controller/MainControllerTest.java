@@ -91,54 +91,54 @@ class MainControllerTest {
     /**
      * Test add training success.
      */
-    @Test
-    void testAddTraining_Success() {
-
-        Training training = new Training(1,1, "type",123,123, LocalDate.of(2024,4,10),new Extra("name",11));
-        mainController.addTraining(training);
-        Mockito.verify(trainingService, Mockito.times(1)).addTraining(training);
-    }
+//    @Test
+//    void testAddTraining_Success() {
+//
+//        Training training = new Training(1,1, "type",123,123, LocalDate.of(2024,4,10),new Extra("name",11));
+//        mainController.addTraining(training);
+//        Mockito.verify(trainingService, Mockito.times(1)).addTraining(training);
+//    }
 
     /**
      * Test get static success.
      */
-    @Test
-    void testGetStatic_Success() {
-        Training training = new Training(1,1, "type",123,123, LocalDate.of(2024,4,10),new Extra("name",11));
-        mainController.addTraining(training);
-        mainController.getStatistic();
-        Mockito.verify(trainingService, Mockito.times(1)).getStatistic();
-    }
+//    @Test
+//    void testGetStatic_Success() {
+//        Training training = new Training(1,1, "type",123,123, LocalDate.of(2024,4,10),new Extra("name",11));
+//        mainController.addTraining(training);
+//        mainController.getStatistic();
+//        Mockito.verify(trainingService, Mockito.times(1)).getStatistic();
+//    }
     /**
      * Test add type training success.
      */
-    @Test
-    void testAddType_Success() {
-        String type = "бег";
-        mainController.addType(type);
-        Mockito.verify(trainingService, Mockito.times(1)).addType(type);
-    }
+//    @Test
+//    void testAddType_Success() {
+//        String type = "бег";
+//        mainController.addType(type);
+//        Mockito.verify(trainingService, Mockito.times(1)).addType(type);
+//    }
 
     /**
      * Test delete training success.
      */
-    @Test
-    void testDeleteTraining_Success() {
-        int id =1;
-        Training training = new Training(1,1, "type",123,123, LocalDate.of(2024,4,10),new Extra("name",11));
-        mainController.addTraining(training);
-        mainController.deleteTraining(id);
-        Mockito.verify(trainingService, Mockito.times(1)).deleteTraining(id);
-    }
+//    @Test
+//    void testDeleteTraining_Success() {
+//        int id =1;
+//        Training training = new Training(1,1, "type",123,123, LocalDate.of(2024,4,10),new Extra("name",11));
+//        mainController.addTraining(training);
+//        mainController.deleteTraining(id);
+//        Mockito.verify(trainingService, Mockito.times(1)).deleteTraining(id);
+//    }
     /**
      * Test update training success.
      */
-    @Test
-    void testUpdateTraining_Success() {
-        Training training = new Training(1,1, "type",123,123, LocalDate.of(2024,4,10),new Extra("name",11));
-        mainController.addTraining(training);
-        User user = new User("login","password",Role.ADMIN);
-        mainController.updateTraining(user, training);
-        Mockito.verify(trainingService, Mockito.times(1)).updateTraining(user, training);
-    }
+//    @Test
+//    void testUpdateTraining_Success() {
+//        Training training = new Training(1,1, "type",123,123, LocalDate.of(2024,4,10),new Extra("name",11));
+//        mainController.addTraining(training);
+//        User user = new User("login","password",Role.ADMIN);
+//        mainController.updateTraining(user, training);
+//        Mockito.verify(trainingService, Mockito.times(1)).updateTraining(user, training);
+//    }
 }

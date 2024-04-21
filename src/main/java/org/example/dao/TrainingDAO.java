@@ -1,6 +1,8 @@
 package org.example.dao;
 
+import org.example.model.Extra;
 import org.example.model.Training;
+import org.example.model.Type;
 import org.example.model.User;
 
 import java.time.LocalDate;
@@ -11,7 +13,7 @@ public interface TrainingDAO {
     List<Map.Entry<Integer, Training>> getTraining(User user);
     Training addTraining(Training training);
     int getStatistic();
-    List<String> addType(String type);
+    Type addType(Type type);
     void defaultType();
     void deleteTraining(int id);
 
@@ -21,4 +23,7 @@ public interface TrainingDAO {
     List<Training> findAllByUserId(int userId);
 
     List<Training> findAll();
+
+    Extra addExtra(Extra extra);
+
 }

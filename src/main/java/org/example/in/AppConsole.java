@@ -3,9 +3,9 @@ package org.example.in;
 import org.example.controller.MainController;
 import org.example.dao.impl.TrainingDAOImpl;
 import org.example.dao.impl.SecurityDAOImpl;
-import org.example.exception.NotFoundException;
 import org.example.model.Extra;
 import org.example.model.Training;
+import org.example.model.Type;
 import org.example.model.User;
 import org.example.model.enumerates.Role;
 import org.example.service.TrainingService;
@@ -42,40 +42,41 @@ public class AppConsole {
             System.out.println(startMenu);
             int input = Integer.parseInt(scanner.nextLine().toLowerCase());
             switch (input) {
-                case 1:
+                case 1 -> {
                     System.out.println("Введите логин и пароль:");
                     String[] input1 = scanner.nextLine().split(" ");
-                    if (input1.length<1){
+                    if (input1.length < 1) {
                         System.out.println("невверный формат");
                         continue;
                     }
                     String name = input1[0];
                     String password = input1[1];
-                    User user = new User(name,password);
-                    User login=mainController.login(user);
+                    User user = new User(name, password);
+                    User login = mainController.login(user);
                     AppLoop(login);
-                    break;
-                case 2:
-                    final String userExample="""
-            Введите нового пользователя: логин, пароль и права доступа(user, admin)
-            Пример: юзер 123 ADMIN
-            ввод производить через пробелы
-            """;
+                }
+                case 2 -> {
+                    final String userExample = """
+                            Введите нового пользователя: логин, пароль и права доступа(user, admin)
+                            Пример: юзер 123 ADMIN
+                            ввод производить через пробелы
+                            """;
                     System.out.println(userExample);
                     String[] input2 = scanner.nextLine().split(" ");
-                    if (input2.length<3 ){
+                    if (input2.length < 3) {
                         System.out.println("неверный формат");
                         continue;
                     }
-                    String name1=input2[0];
-                    String password1=input2[1];
-                    Role role= Role.valueOf(input2[2].toUpperCase());
-                    User user2 =new User(name1,password1,role);
+                    String name1 = input2[0];
+                    String password1 = input2[1];
+                    Role role = Role.valueOf(input2[2].toUpperCase());
+                    User user2 = new User(name1, password1, role);
                     mainController.createUser(user2);
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     scanner.close();
                     System.exit(0);
+                }
             }
         }
     }
@@ -99,16 +100,15 @@ public class AppConsole {
             System.out.println(loopMenu);
             int input = Integer.parseInt(scanner.nextLine().toLowerCase());
             switch (input) {
-                case 1:
-                    System.out.println( mainController.getTraining(user));
-                    break;
-                case 2:
+                case 1 -> System.out.println(mainController.getTraining(user));
+                case 2 -> {
                     System.out.println("Введите название типа тренировки из списка");
                     System.out.println(TrainingDAOImpl.trainingType);
                     String type = scanner.nextLine();
-                    if (!TrainingDAOImpl.trainingType.contains(type)){
-                        throw new NotFoundException("Такого типа тренировки нет");
-                    }
+//                    if (!TrainingDAOImpl.trainingType.contains(type)){
+//                        throw new NotFoundException("Такого типа тренировки нет");
+//                    }
+                    int idType = mainController.getTypeId(type);
                     System.out.println("Введите длительность в минутах");
                     int time = Integer.parseInt(scanner.nextLine());
                     System.out.println("Введите количество сженных калорий");
@@ -119,31 +119,33 @@ public class AppConsole {
                     int day = Integer.parseInt(in[0]);
                     int month = Integer.parseInt(in[1]);
                     int year = Integer.parseInt(in[2]);
-                    LocalDate date = LocalDate.of(year,month,day);
+                    LocalDate date = LocalDate.of(year, month, day);
                     System.out.println("Добавьте дополнительную информацию");
                     String extraName = scanner.nextLine();
                     System.out.println("Введите значение");
                     int extraValue = Integer.parseInt(scanner.nextLine());
-                    Extra extra= new Extra(extraName,extraValue);
-                    Training training = new Training(user.getId(), type,time,calorie,date,extra);
+                    Extra extra = mainController.addExtra(Extra.builder().name(extraName).value(extraValue).build());
+//                    Training training = new Training(user.getId(), type,time,calorie,date,extra);
+                    Training training = Training.builder().userId(user.getId()).time(time).calorie(calorie).
+                            date(date).typeId(idType).extraId(extra.id).build();
                     mainController.addTraining(training);
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     System.out.println("Введите id тренировки для удаления");
                     int id = Integer.parseInt(scanner.nextLine());
                     mainController.deleteTraining(id);
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     System.out.println();
                     System.out.println("Введите id тренировки для редактирования");
                     int id1 = Integer.parseInt(scanner.nextLine());
                     System.out.println("Введите название типа тренировки из списка");
                     System.out.println(TrainingDAOImpl.trainingType);
                     String type1 = scanner.nextLine();
-                    if (!TrainingDAOImpl.trainingType.contains(type1)){
-                        throw new NotFoundException("Такого типа тренировки нет");
-                    }
-
+//                    if (!TrainingDAOImpl.trainingType.contains(type1)){
+//                        throw new NotFoundException("Такого типа тренировки нет");
+//                    }
+                    int idType1 = mainController.getTypeId(type1);
                     System.out.println("Введите длительность в минутах");
                     int time1 = Integer.parseInt(scanner.nextLine());
                     System.out.println("Введите количество сженных калорий");
@@ -154,35 +156,32 @@ public class AppConsole {
                     int day1 = Integer.parseInt(in1[0]);
                     int month1 = Integer.parseInt(in1[1]);
                     int year1 = Integer.parseInt(in1[2]);
-                    LocalDate date1 = LocalDate.of(year1,month1,day1);
+                    LocalDate date1 = LocalDate.of(year1, month1, day1);
                     System.out.println("Добавьте дополнительную информацию");
                     String extraName1 = scanner.nextLine();
                     System.out.println("Введите значение");
                     int extraValue1 = Integer.parseInt(scanner.nextLine());
-                    Extra extra1= new Extra(extraName1,extraValue1);
-                    Training training1 = new Training(id1,user.getId(),type1,time1,calorie1,date1,extra1);
+                    Extra extra1 = mainController.addExtra(Extra.builder().name(extraName1).value(extraValue1).build());
+                    Training training1 = new Training(id1, user.getId(), time1, calorie1, date1, idType1, extra1.getId());
                     mainController.updateTraining(user, training1);
-                    break;
-                case 5:
-                    mainController.getStatistic();
-                    break;
-                case 6:
+                }
+                case 5 -> mainController.getStatistic();
+                case 6 -> {
                     System.out.println("Введите новый тип тренировки");
                     String type2 = scanner.nextLine().toLowerCase();
-                    System.out.println(mainController.addType(type2));
-                    break;
-                case 7:
-                    startApp();
-                    break;
-                case 8:
+                    System.out.println(mainController.addType(Type.builder().typeName(type2).build()));
+                }
+                case 7 -> startApp();
+                case 8 -> {
                     scanner.close();
                     System.exit(0);
+                }
             }
         }}
 
-    public void defaultValues() {
-        mainController.defalt();
-    }
+//    public void defaultValues() {
+//        mainController.defalt();
+//    }
 }
 
 

@@ -16,20 +16,12 @@ import java.util.Comparator;
 public class Training implements Comparator<Training> {
     public int id;
     public int userId;
-    public String type;
     public int time;
     public int calorie;
     public LocalDate date;
-    public Extra extra;
+    public int typeId;
+    public int extraId;
 
-    public Training(int userId, String type, int time, int calorie, LocalDate date, Extra extra) {
-        this.userId = userId;
-        this.type = type;
-        this.time = time;
-        this.calorie = calorie;
-        this.date = date;
-        this.extra = extra;
-    }
 
 
     @Override

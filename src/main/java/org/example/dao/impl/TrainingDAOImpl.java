@@ -1,11 +1,18 @@
 package org.example.dao.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dao.TrainingDAO;
+import org.example.dbconfig.ConnectionManager;
 import org.example.exception.AlreadyExistException;
 import org.example.exception.NotFoundException;
+import org.example.model.Extra;
 import org.example.model.Training;
+import org.example.model.Type;
 import org.example.model.User;
 import org.example.model.enumerates.Role;
+
+import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 /**
@@ -13,11 +20,14 @@ import java.util.*;
  * implements users, indications
  * using ArraList, Treemap//
  */
-
+@RequiredArgsConstructor
 public class TrainingDAOImpl implements TrainingDAO {
+    private final ConnectionManager connectionManager;
     private static int ID = 1;
     private final Map<Integer, Training> trainings = new HashMap<>();
-    public static List<String> trainingType=new ArrayList<>();
+    public static List<String> trainingType = new ArrayList<>();
+
+
 
     public TrainingDAOImpl() {
     }
@@ -85,12 +95,37 @@ public class TrainingDAOImpl implements TrainingDAO {
      * @return
      */
     @Override
-    public List<String> addType(String type) {
-        if (trainingType.contains(type)) {
-            throw new AlreadyExistException("Данный тип тренировки уже существует");
+    public Type addType(Type type) {
+        String sqlSave = """
+                INSERT INTO app.training_type (type_name) VALUES (?)
+                """;
+
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlSave, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, type.getTypeName());
+            int affectedRows = preparedStatement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new RuntimeException("Failed to save training type");
+            }
+
+            ResultSet keys = preparedStatement.getGeneratedKeys();
+            if (keys.next()) {
+                type.setId(keys.getInt(1));
+            } else {
+                throw new RuntimeException("Failed to save meter type");
+            }
+
+            return type;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to save meter type", e);
         }
-        trainingType.add(type);
-        return trainingType;
+
+//        if (trainingType.contains(type)) {
+//            throw new AlreadyExistException("Данный тип тренировки уже существует");
+//        }
+//        trainingType.add(type);
+//        return trainingType;
     }
 
     /**
@@ -111,7 +146,8 @@ public class TrainingDAOImpl implements TrainingDAO {
             if (key == id) {
                 trainings.remove(key);
             }
-        };
+        }
+        ;
     }
 
     /**
@@ -122,15 +158,23 @@ public class TrainingDAOImpl implements TrainingDAO {
      */
     @Override
     public Training findByDate(LocalDate date, String type) {
-        Training training = null;
-        for (Map.Entry<Integer,Training> entry : trainings.entrySet()) {
-            if (entry.getValue().getDate().equals(date) &&
-                    entry.getValue().getType().equals(type)) {
-                training = entry.getValue();
-                break;
+        String sqlFindAllByUserId = """
+                SELECT * FROM app.training WHERE date = ? and type=?
+                """;
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlFindAllByUserId)) {
+            preparedStatement.setDate(1, Date.valueOf(date));
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Training> result = new ArrayList<>();
+            while (resultSet.next()) {
+
+                result.add((new Training(resultSet.getInt("id",....))));
             }
+            return result;
+        } catch (SQLException e) {
+            return Collections.emptyList();
         }
-        return training;
     }
 
     @Override
@@ -143,12 +187,13 @@ public class TrainingDAOImpl implements TrainingDAO {
         }
         return trainings.get(newTraining.getId());
     }
+
     @Override
     public List<Training> findAllByUserId(int userId) {
         List<Training> result = new ArrayList<>();
 
         for (Training training : trainings.values()) {
-            if (training.getUserId()==(userId)) {
+            if (training.getUserId() == (userId)) {
                 result.add(training);
             }
         }
@@ -162,4 +207,36 @@ public class TrainingDAOImpl implements TrainingDAO {
         list.sort(Comparator.comparing((Map.Entry<Integer, Training> a) -> a.getValue().getDate()));
         return list;
     }
+
+    @Override
+    public Extra addExtra(Extra extra) {
+        String sqlSave = """
+                INSERT INTO app.training_extra (type_name, value) VALUES (?,?)
+                """;
+
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlSave, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, extra.getName());
+            preparedStatement.setInt(2, extra.getValue());
+            int affectedRows = preparedStatement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new RuntimeException("Failed to save training extra information");
+            }
+
+            ResultSet keys = preparedStatement.getGeneratedKeys();
+            if (keys.next()) {
+                extra.setId(keys.getInt(1));
+            } else {
+                throw new RuntimeException("Failed to save training extra information");
+            }
+
+            return extra;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to save meter type", e);
+        }
+
+    }
+
+
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        logicalFilePath="db/changelog.xml">
+        <changeSet id="1" author="fanat1kq">
+
+            <sql>
+                CREATE SCHEMA IF NOT EXISTS app;
+            </sql>
+
+
+            <createSequence schemaName="app"
+                            sequenceName="User_id_seq"
+                            incrementBy="1"
+                            startValue="1"
+                            minValue="1"
+
+                            maxValue="9223372036854775807"/>
+
+            <createTable tableName="users"  schemaName="app">
+                <column name="id" type="bigint" defaultValueSequenceNext="User_id_seq">
+                    <constraints primaryKey="true"
+                                 primaryKeyName="User_pkey"
+                                 nullable="false"/>
+                </column>
+                <column name="login" type="VARCHAR(255)">
+                    <constraints nullable="false"
+                                 unique="true"
+                                 uniqueConstraintName="user_unique"/>
+                </column>
+                <column name="password" type="VARCHAR(255)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="role" type="VARCHAR(255)">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+           </changeSet>
+</databaseChangeLog>

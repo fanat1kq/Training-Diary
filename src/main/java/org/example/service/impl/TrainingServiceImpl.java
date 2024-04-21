@@ -2,7 +2,9 @@ package org.example.service.impl;
 
 import org.example.dao.TrainingDAO;
 import org.example.exception.AlreadyExistException;
+import org.example.model.Extra;
 import org.example.model.Training;
+import org.example.model.Type;
 import org.example.model.User;
 import org.example.model.enumerates.Role;
 import org.example.service.TrainingService;
@@ -38,8 +40,10 @@ public class TrainingServiceImpl implements TrainingService {
         return trainingDAO.getStatistic();
     }
 
+
+
     @Override
-    public List<String> addType(String type) {
+    public Type addType(Type type) {
 
         return trainingDAO.addType(type);
     }
@@ -57,4 +61,11 @@ public class TrainingServiceImpl implements TrainingService {
     public Training updateTraining(User newUser, Training newTraining) {
         return trainingDAO.updateTraining(newUser,newTraining);
     }
+
+    @Override
+    public Extra addExtra(Extra extra) {
+        return trainingDAO.addExtra(extra);
+    }
+
+
 }
