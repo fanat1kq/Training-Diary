@@ -3,6 +3,8 @@ package org.example.in;
 import org.example.controller.MainController;
 import org.example.dao.impl.TrainingDAOImpl;
 import org.example.dao.impl.SecurityDAOImpl;
+import org.example.dao.impl.TrainingTypeDAOImpl;
+import org.example.dbconfig.ConnectionManager;
 import org.example.model.Extra;
 import org.example.model.Training;
 import org.example.model.Type;
@@ -10,8 +12,10 @@ import org.example.model.User;
 import org.example.model.enumerates.Role;
 import org.example.service.TrainingService;
 import org.example.service.SecurityService;
+import org.example.service.TypeService;
 import org.example.service.impl.TrainingServiceImpl;
 import org.example.service.impl.SecurityServiceImpl;
+import org.example.service.impl.TypeServiceImpl;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -23,9 +27,10 @@ import java.util.Scanner;
 
 public class AppConsole {
     Scanner scanner= new Scanner(System.in);
-    static SecurityService securityService = new SecurityServiceImpl(new SecurityDAOImpl());
-    static TrainingService trainingService = new TrainingServiceImpl(new TrainingDAOImpl());
-    private static final MainController mainController=new MainController(trainingService, securityService);
+    static SecurityService securityService = new SecurityServiceImpl(new SecurityDAOImpl(new ConnectionManager()));
+    static TrainingService trainingService = new TrainingServiceImpl(new TrainingDAOImpl(new ConnectionManager()));
+    static TypeService typeService = new TypeServiceImpl(new TrainingTypeDAOImpl(new ConnectionManager()));
+    private static final MainController mainController=new MainController(trainingService, securityService, typeService);
 
     /**
      * main menu of App

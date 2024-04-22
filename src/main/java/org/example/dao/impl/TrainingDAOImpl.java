@@ -1,9 +1,10 @@
 package org.example.dao.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.dao.TrainingDAO;
 import org.example.dbconfig.ConnectionManager;
-import org.example.exception.AlreadyExistException;
 import org.example.exception.NotFoundException;
 import org.example.model.Extra;
 import org.example.model.Training;
@@ -11,26 +12,24 @@ import org.example.model.Type;
 import org.example.model.User;
 import org.example.model.enumerates.Role;
 
-import java.sql.*;
 import java.sql.Date;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.*;
+
 /**
  * Created by fanat1kq on 12/04/2024.
  * implements users, indications
  * using ArraList, Treemap//
  */
-@RequiredArgsConstructor
+
+@AllArgsConstructor
 public class TrainingDAOImpl implements TrainingDAO {
     private final ConnectionManager connectionManager;
-    private static int ID = 1;
     private final Map<Integer, Training> trainings = new HashMap<>();
     public static List<String> trainingType = new ArrayList<>();
 
 
-
-    public TrainingDAOImpl() {
-    }
 
     /**
      * get data of training
@@ -62,10 +61,11 @@ public class TrainingDAOImpl implements TrainingDAO {
      */
     @Override
     public Training addTraining(Training training) {
-        training.setId(ID);
-        trainings.put(training.getId(), training);
-        ID++;
-        return trainings.get(training.getId());
+//        training.setId(ID);
+//        trainings.put(training.getId(), training);
+//        ID++;
+//        return trainings.get(training.getId());
+        return null;
     }
 
 
@@ -76,17 +76,18 @@ public class TrainingDAOImpl implements TrainingDAO {
      */
     @Override
     public int getStatistic() {
-        int calorie = 0;
-        for (Map.Entry<Integer, Training> entry : trainings.entrySet()) {
-            LocalDate date = entry.getValue().getDate();
-            LocalDate after = LocalDate.now().minusMonths(3);
-            if (date.isAfter(after)) {
-                calorie = entry.getValue().getCalorie();
-                calorie++;
-            }
-        }
-        System.out.println("Всего потрачено калорий за последние три месяца " + calorie);
-        return calorie;
+//        int calorie = 0;
+//        for (Map.Entry<Integer, Training> entry : trainings.entrySet()) {
+//            LocalDate date = entry.getValue().getDate();
+//            LocalDate after = LocalDate.now().minusMonths(3);
+//            if (date.isAfter(after)) {
+//                calorie = entry.getValue().getCalorie();
+//                calorie++;
+//            }
+//        }
+//        System.out.println("Всего потрачено калорий за последние три месяца " + calorie);
+//        return calorie;
+        return 0;
     }
 
     /**
@@ -128,26 +129,31 @@ public class TrainingDAOImpl implements TrainingDAO {
 //        return trainingType;
     }
 
+    @Override
+    public void defaultType() {
+
+    }
+
     /**
      * default data of type training
      */
-    @Override
-    public void defaultType() {
-        trainingType.add("кардио");
-        trainingType.add("подтягивания");
-    }
+//    @Override
+//    public void defaultType() {
+//        trainingType.add("кардио");
+//        trainingType.add("подтягивания");
+//    }
 
     /**
      * delete training by id
      */
     @Override
     public void deleteTraining(int id) {
-        for (Integer key : trainings.keySet()) {
-            if (key == id) {
-                trainings.remove(key);
-            }
-        }
-        ;
+//        for (Integer key : trainings.keySet()) {
+//            if (key == id) {
+//                trainings.remove(key);
+//            }
+//        }
+//        ;
     }
 
     /**
@@ -166,14 +172,14 @@ public class TrainingDAOImpl implements TrainingDAO {
             preparedStatement.setDate(1, Date.valueOf(date));
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            List<Training> result = new ArrayList<>();
+            Training result = null;
             while (resultSet.next()) {
 
-                result.add((new Training(resultSet.getInt("id",....))));
+                result = buildTraining(resultSet);
             }
             return result;
         } catch (SQLException e) {
-            return Collections.emptyList();
+            return null;
         }
     }
 
@@ -203,9 +209,20 @@ public class TrainingDAOImpl implements TrainingDAO {
 
     @Override
     public List<Training> findAll() {
-        List list = new ArrayList(trainings.entrySet());
-        list.sort(Comparator.comparing((Map.Entry<Integer, Training> a) -> a.getValue().getDate()));
-        return list;
+        String sqlFindAll = """
+                SELECT * FROM app.training
+                """;
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlFindAll)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Training> result = new ArrayList<>();
+            while (resultSet.next()) {
+                result.add(buildTraining(resultSet));
+            }
+            return result;
+        } catch (SQLException e) {
+            return Collections.emptyList();
+        }
     }
 
     @Override
@@ -213,7 +230,6 @@ public class TrainingDAOImpl implements TrainingDAO {
         String sqlSave = """
                 INSERT INTO app.training_extra (type_name, value) VALUES (?,?)
                 """;
-
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlSave, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, extra.getName());
@@ -238,5 +254,16 @@ public class TrainingDAOImpl implements TrainingDAO {
 
     }
 
+    private Training buildTraining(ResultSet resultSet) throws SQLException {
+        return Training.builder()
+                .id(resultSet.getInt("id"))
+                .userId(resultSet.getInt("user_id"))
+                .time(resultSet.getInt("time"))
+                .calorie(resultSet.getInt("calorie"))
+                .date(resultSet.getDate("training_date").toLocalDate())
+                .typeId(resultSet.getInt("type_id"))
+                .extraId(resultSet.getInt("extra_id"))
+                .build();
+    }
 
 }

@@ -6,5 +6,5 @@ public interface SecurityDAO {
     User findByLogin(String name);
     User createUser(User user);
 
-    void defaultUser();
+
 }

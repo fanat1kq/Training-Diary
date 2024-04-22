@@ -1,7 +1,7 @@
 package org.example.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.example.dao.TrainingDAO;
-import org.example.exception.AlreadyExistException;
 import org.example.model.Extra;
 import org.example.model.Training;
 import org.example.model.Type;
@@ -10,13 +10,9 @@ import org.example.model.enumerates.Role;
 import org.example.service.TrainingService;
 
 import java.util.List;
-
+@AllArgsConstructor
 public class TrainingServiceImpl implements TrainingService {
     private final TrainingDAO trainingDAO;
-
-    public TrainingServiceImpl(TrainingDAO trainingDAO) {
-        this.trainingDAO = trainingDAO;
-    }
 
     @Override
     public List<Training> getTraining(int userId, Role role) {
@@ -28,11 +24,12 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public Training addTraining(Training training) {
-        Training trainingByDate = trainingDAO.findByDate(training.getDate(), training.getType());
-        if (trainingByDate!=null){
-            throw new AlreadyExistException("Тренировка в этот день уже записана");
-        }
-        return trainingDAO.addTraining(training);
+//        Training trainingByDate = trainingDAO.findByDate(training.getDate(), training.getType());
+//        if (trainingByDate!=null){
+//            throw new AlreadyExistException("Тренировка в этот день уже записана");
+//        }
+//        return trainingDAO.addTraining(training);
+        return null;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package org.example.dbconfig;
 
+import lombok.AllArgsConstructor;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,6 +9,7 @@ import java.sql.SQLException;
 /**
  * Class ConnectionManager use for connection with DB
  */
+@AllArgsConstructor
 public class ConnectionManager {
 
     private static String URL = Config.getUrl();

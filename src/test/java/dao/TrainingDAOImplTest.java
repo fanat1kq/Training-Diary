@@ -3,7 +3,6 @@ package dao;
 import org.example.dao.impl.TrainingDAOImpl;
 import org.example.model.Extra;
 import org.example.model.Training;
-import org.example.model.User;
 import org.junit.jupiter.api.*;
 import java.time.LocalDate;
 import java.util.List;

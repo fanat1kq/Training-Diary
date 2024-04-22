@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.exception.NotValidParametrException;
 import org.example.model.Extra;
 import org.example.model.Training;
@@ -13,20 +14,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-
+@RequiredArgsConstructor
 public class MainController {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
     private final TrainingService trainingService;
     private final SecurityService securityService;
     private final TypeService typeService;
-
-    public MainController(TrainingService trainingService, SecurityService securityService, TypeService typeService) {
-        this.trainingService = trainingService;
-        this.securityService = securityService;
-        this.typeService = typeService;
-    }
-
-
     public List<Training> getTraining(User user){
         log.info("The user with login " + user.getLogin() + " showing his training history");
         return trainingService.getTraining(user.getId(),user.getRole());
@@ -43,10 +36,7 @@ public class MainController {
         log.info("The user add new type training");
         return trainingService.addType(type);
     }
-    public void defalt(){
-        trainingService.defaultType();
-        securityService.defaultUser();
-    }
+
     public void deleteTraining(int id){
         log.info("The user delete training by id");
         trainingService.deleteTraining(id);

@@ -6,5 +6,4 @@ public interface SecurityService {
     User login(User user);
     User createUser(User user);
 
-    void defaultUser();
 }

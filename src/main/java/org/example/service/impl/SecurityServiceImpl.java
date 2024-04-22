@@ -1,17 +1,14 @@
 package org.example.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.example.dao.SecurityDAO;
 import org.example.exception.AuthorizeException;
 import org.example.exception.RegisterException;
 import org.example.model.User;
 import org.example.service.SecurityService;
-
+@AllArgsConstructor
 public class SecurityServiceImpl implements SecurityService {
     private final SecurityDAO securityDAO;
-
-    public SecurityServiceImpl(SecurityDAO securityDAO) {
-        this.securityDAO = securityDAO;
-    }
 
     @Override
     public User login(User user) {
@@ -35,8 +32,4 @@ public class SecurityServiceImpl implements SecurityService {
     return securityDAO.createUser(user);
     }
 
-    @Override
-    public void defaultUser() {
-        securityDAO.defaultUser();
-    }
 }

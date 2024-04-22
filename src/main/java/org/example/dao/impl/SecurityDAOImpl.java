@@ -1,5 +1,7 @@
 package org.example.dao.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.dao.SecurityDAO;
 import org.example.dbconfig.ConnectionManager;
 import org.example.model.enumerates.Role;
@@ -9,29 +11,33 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-
+@AllArgsConstructor
 public class SecurityDAOImpl implements SecurityDAO {
-    private final Map<Integer, User> users = new HashMap<>();
-    private static int ID = 1;
+    private final ConnectionManager connectionProvider;
+
 
     /**
      * login
      *
      * @return User
-     * @param name name of user
+     * @param login name of user
      */
     @Override
-    public User findByLogin(String name) {
-        User user =null;
-        List<User> list = new ArrayList<>(users.values());
-        for ( User s : list) {
-            if (s.getLogin().equals(name)) {
-                user = s;
-                break;
-            }
+    public User findByLogin(String login) {
+        String sqlFindByLogin = """
+                SELECT * FROM app.users WHERE login = ?
+                """;
+        try (Connection connection = connectionProvider.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlFindByLogin)) {
+            preparedStatement.setString(1, login);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return resultSet.next() ?
+                    buildUser(resultSet)
+                    : null;
+        } catch (SQLException e) {
+            return null;
         }
-       return user;
     }
 
     /**
@@ -60,9 +66,17 @@ public class SecurityDAOImpl implements SecurityDAO {
      * add default user
      * @return User
      */
-    @Override
-    public void defaultUser() {
-        users.put(ID, new User("admin","admin", Role.ADMIN));
+//    @Override
+//    public void defaultUser() {
+//        users.put(ID, new User("admin","admin", Role.ADMIN));
+//    }
+    private User buildUser(ResultSet resultSet) throws SQLException {
+        return User.builder()
+                .id(resultSet.getInt("id"))
+                .login(resultSet.getString("login"))
+                .role(Role.valueOf(resultSet.getString("role")))
+                .password(resultSet.getString("password"))
+                .build();
     }
 }
 

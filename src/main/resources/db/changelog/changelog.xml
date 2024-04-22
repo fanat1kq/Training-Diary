@@ -8,5 +8,7 @@
         <include file="000-create-schema.xml" relativeToChangelogFile="true"/>
         <include file="001-create-table-users.xml" relativeToChangelogFile="true"/>
         <include file="002-create-table-training.xml" relativeToChangelogFile="true"/>
-        <include file="003-insert-data.xml" relativeToChangelogFile="true"/>
+        <include file="003-create-table-training_type.xml" relativeToChangelogFile="true"/>
+        <include file="004-create-table-training_extra.xml" relativeToChangelogFile="true"/>
+        <include file="005-insert-data.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
