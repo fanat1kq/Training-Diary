@@ -1,7 +1,6 @@
 package org.example.dao.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.example.dao.SecurityDAO;
 import org.example.dbconfig.ConnectionManager;
 import org.example.model.enumerates.Role;
@@ -57,19 +56,11 @@ public class SecurityDAOImpl implements SecurityDAO {
             System.out.println("Ошибка при регистрации игрока: " + e.getMessage());
         }
         return user;
-//        ID++;
-//        user.setId(ID);
-//        users.put(user.getId(), user);
-//        return users.get(user.getId());
         }
     /**
      * add default user
      * @return User
      */
-//    @Override
-//    public void defaultUser() {
-//        users.put(ID, new User("admin","admin", Role.ADMIN));
-//    }
     private User buildUser(ResultSet resultSet) throws SQLException {
         return User.builder()
                 .id(resultSet.getInt("id"))

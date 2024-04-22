@@ -2,6 +2,7 @@ package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.example.dao.TrainingDAO;
+import org.example.exception.AlreadyExistException;
 import org.example.model.Extra;
 import org.example.model.Training;
 import org.example.model.Type;
@@ -28,8 +29,7 @@ public class TrainingServiceImpl implements TrainingService {
 //        if (trainingByDate!=null){
 //            throw new AlreadyExistException("Тренировка в этот день уже записана");
 //        }
-//        return trainingDAO.addTraining(training);
-        return null;
+        return trainingDAO.addTraining(training);
     }
 
     @Override
@@ -43,10 +43,6 @@ public class TrainingServiceImpl implements TrainingService {
     public Type addType(Type type) {
 
         return trainingDAO.addType(type);
-    }
-    @Override
-    public void defaultType() {
-        trainingDAO.defaultType();
     }
 
     @Override

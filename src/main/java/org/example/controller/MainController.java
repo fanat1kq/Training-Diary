@@ -73,4 +73,7 @@ public class MainController {
     public int getTypeId(String type) {
         return typeService.getTypeId(type);
     }
+
+    public List<Type> getAllType() { return typeService.getAllType();
+    }
 }

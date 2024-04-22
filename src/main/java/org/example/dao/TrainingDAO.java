@@ -14,7 +14,6 @@ public interface TrainingDAO {
     Training addTraining(Training training);
     int getStatistic();
     Type addType(Type type);
-    void defaultType();
     void deleteTraining(int id);
 
     Training findByDate(LocalDate date, String type);

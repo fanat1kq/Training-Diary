@@ -15,10 +15,10 @@ import java.util.Comparator;
 @Builder
 public class Training implements Comparator<Training> {
     public int id;
-    public int userId;
     public int time;
     public int calorie;
     public LocalDate date;
+    public int userId;
     public int typeId;
     public int extraId;
 

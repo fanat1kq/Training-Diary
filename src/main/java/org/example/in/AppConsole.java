@@ -26,24 +26,24 @@ import java.util.Scanner;
  */
 
 public class AppConsole {
-    Scanner scanner= new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
     static SecurityService securityService = new SecurityServiceImpl(new SecurityDAOImpl(new ConnectionManager()));
     static TrainingService trainingService = new TrainingServiceImpl(new TrainingDAOImpl(new ConnectionManager()));
     static TypeService typeService = new TypeServiceImpl(new TrainingTypeDAOImpl(new ConnectionManager()));
-    private static final MainController mainController=new MainController(trainingService, securityService, typeService);
+    private static final MainController mainController = new MainController(trainingService, securityService, typeService);
 
     /**
      * main menu of App
      */
     public void startApp() throws ParseException {
-        while(true) {
-            final String startMenu="""
-            Внимание
-            нажмите цифру желаемого действия
-            1.Войти
-            2.Создать пользователя
-            3.Выйти
-            """;
+        while (true) {
+            final String startMenu = """
+                    Внимание
+                    нажмите цифру желаемого действия
+                    1.Войти
+                    2.Создать пользователя
+                    3.Выйти
+                    """;
             System.out.println(startMenu);
             int input = Integer.parseInt(scanner.nextLine().toLowerCase());
             switch (input) {
@@ -63,7 +63,7 @@ public class AppConsole {
                 case 2 -> {
                     final String userExample = """
                             Введите нового пользователя: логин, пароль и права доступа(user, admin)
-                            Пример: юзер 123 ADMIN
+                            Пример: login 123 admin
                             ввод производить через пробелы
                             """;
                     System.out.println(userExample);
@@ -85,30 +85,32 @@ public class AppConsole {
             }
         }
     }
+
     /**
-     *menu working with data of training
-     * @exception ParseException
+     * menu working with data of training
+     *
      * @param user data of user
+     * @throws ParseException
      */
-    public  void AppLoop(User user) throws ParseException {
+    public void AppLoop(User user) throws ParseException {
         while (true) {
-            final String loopMenu="""
-            1. Просмотреть тренировки
-            2. Добавить тренировку
-            3. Удалить тренировку
-            4. Отредактировать тренировку
-            5. Посмотреть статистику по колориям
-            6. Добавить тип тренировки
-            7. Обратно в меню
-            8. Выход
-            """;
+            final String loopMenu = """
+                    1. Просмотреть тренировки
+                    2. Добавить тренировку
+                    3. Удалить тренировку
+                    4. Отредактировать тренировку
+                    5. Посмотреть статистику по колориям
+                    6. Добавить тип тренировки
+                    7. Обратно в меню
+                    8. Выход
+                    """;
             System.out.println(loopMenu);
             int input = Integer.parseInt(scanner.nextLine().toLowerCase());
             switch (input) {
                 case 1 -> System.out.println(mainController.getTraining(user));
                 case 2 -> {
+                    System.out.println(mainController.getAllType());
                     System.out.println("Введите название типа тренировки из списка");
-                    System.out.println(TrainingDAOImpl.trainingType);
                     String type = scanner.nextLine();
 //                    if (!TrainingDAOImpl.trainingType.contains(type)){
 //                        throw new NotFoundException("Такого типа тренировки нет");
@@ -130,7 +132,6 @@ public class AppConsole {
                     System.out.println("Введите значение");
                     int extraValue = Integer.parseInt(scanner.nextLine());
                     Extra extra = mainController.addExtra(Extra.builder().name(extraName).value(extraValue).build());
-//                    Training training = new Training(user.getId(), type,time,calorie,date,extra);
                     Training training = Training.builder().userId(user.getId()).time(time).calorie(calorie).
                             date(date).typeId(idType).extraId(extra.id).build();
                     mainController.addTraining(training);
@@ -167,7 +168,7 @@ public class AppConsole {
                     System.out.println("Введите значение");
                     int extraValue1 = Integer.parseInt(scanner.nextLine());
                     Extra extra1 = mainController.addExtra(Extra.builder().name(extraName1).value(extraValue1).build());
-                    Training training1 = new Training(id1, user.getId(), time1, calorie1, date1, idType1, extra1.getId());
+                    Training training1 = new Training(id1, user.getId(), time1, date1, calorie1, idType1, extra1.getId());
                     mainController.updateTraining(user, training1);
                 }
                 case 5 -> mainController.getStatistic();
@@ -182,11 +183,8 @@ public class AppConsole {
                     System.exit(0);
                 }
             }
-        }}
+        }
+    }
 
-//    public void defaultValues() {
-//        mainController.defalt();
-//    }
 }
-
 

@@ -30,7 +30,6 @@ public class TrainingDAOImpl implements TrainingDAO {
     public static List<String> trainingType = new ArrayList<>();
 
 
-
     /**
      * get data of training
      *
@@ -61,11 +60,33 @@ public class TrainingDAOImpl implements TrainingDAO {
      */
     @Override
     public Training addTraining(Training training) {
-//        training.setId(ID);
-//        trainings.put(training.getId(), training);
-//        ID++;
-//        return trainings.get(training.getId());
-        return null;
+
+        String sqlSave = """
+                INSERT INTO app.training (time, calorie, date, user_id, type_id, extra_id)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """;
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlSave, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setInt(1, training.getTime());
+            preparedStatement.setInt(2, training.getCalorie());
+            preparedStatement.setDate(3, Date.valueOf(training.getDate()));
+            preparedStatement.setInt(4, training.getUserId());
+            preparedStatement.setInt(5, training.getTypeId());
+            preparedStatement.setInt(6, training.getExtraId());
+            preparedStatement.executeUpdate();
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                long id = generatedKeys.getInt(1);
+                if (id != 0) {
+                    training.setId((int) id);
+                } else {
+                    throw new RuntimeException("Failed to generate ID for training");
+                }
+            }
+            return training;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to save training", e);
+        }
     }
 
 
@@ -116,7 +137,6 @@ public class TrainingDAOImpl implements TrainingDAO {
             } else {
                 throw new RuntimeException("Failed to save meter type");
             }
-
             return type;
         } catch (Exception e) {
             throw new RuntimeException("Failed to save meter type", e);
@@ -127,11 +147,6 @@ public class TrainingDAOImpl implements TrainingDAO {
 //        }
 //        trainingType.add(type);
 //        return trainingType;
-    }
-
-    @Override
-    public void defaultType() {
-
     }
 
     /**
@@ -148,23 +163,28 @@ public class TrainingDAOImpl implements TrainingDAO {
      */
     @Override
     public void deleteTraining(int id) {
-//        for (Integer key : trainings.keySet()) {
-//            if (key == id) {
-//                trainings.remove(key);
-//            }
-//        }
-//        ;
+        String sqlDelete = """
+                DELETE FROM app.training where id=?
+                """;
+
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlDelete)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete training", e);
+        }
     }
 
-    /**
-     * find training by id
-     *
-     * @param date date of training
-     * @param type type of training
-     */
-    @Override
-    public Training findByDate(LocalDate date, String type) {
-        String sqlFindAllByUserId = """
+        /**
+         * find training by id
+         *
+         * @param date date of training
+         * @param type type of training
+         */
+        @Override
+        public Training findByDate (LocalDate date, String type){
+            String sqlFindAllByUserId = """
                 SELECT * FROM app.training WHERE date = ? and type=?
                 """;
         try (Connection connection = connectionManager.getConnection();
@@ -196,15 +216,22 @@ public class TrainingDAOImpl implements TrainingDAO {
 
     @Override
     public List<Training> findAllByUserId(int userId) {
-        List<Training> result = new ArrayList<>();
+        String sqlFindByUserId = """
+                SELECT * FROM app.training where user_id = ?
+                """;
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlFindByUserId)) {
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-        for (Training training : trainings.values()) {
-            if (training.getUserId() == (userId)) {
-                result.add(training);
+            List<Training> result = new ArrayList<>();
+            while (resultSet.next()) {
+                result.add(buildTraining(resultSet));
             }
+            return result;
+        } catch (SQLException e) {
+            return Collections.emptyList();
         }
-        result.sort(new Training());
-        return result;
     }
 
     @Override
@@ -228,7 +255,7 @@ public class TrainingDAOImpl implements TrainingDAO {
     @Override
     public Extra addExtra(Extra extra) {
         String sqlSave = """
-                INSERT INTO app.training_extra (type_name, value) VALUES (?,?)
+                INSERT INTO app.training_extra (extra_name, value) VALUES (?,?)
                 """;
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlSave, Statement.RETURN_GENERATED_KEYS)) {
@@ -249,7 +276,7 @@ public class TrainingDAOImpl implements TrainingDAO {
 
             return extra;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to save meter type", e);
+            throw new RuntimeException("Failed to save extra information", e);
         }
 
     }
@@ -257,13 +284,14 @@ public class TrainingDAOImpl implements TrainingDAO {
     private Training buildTraining(ResultSet resultSet) throws SQLException {
         return Training.builder()
                 .id(resultSet.getInt("id"))
-                .userId(resultSet.getInt("user_id"))
                 .time(resultSet.getInt("time"))
                 .calorie(resultSet.getInt("calorie"))
-                .date(resultSet.getDate("training_date").toLocalDate())
+                .date(resultSet.getDate("date").toLocalDate())
+                .userId(resultSet.getInt("user_id"))
                 .typeId(resultSet.getInt("type_id"))
                 .extraId(resultSet.getInt("extra_id"))
                 .build();
     }
 
 }
+

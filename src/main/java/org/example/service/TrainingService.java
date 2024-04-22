@@ -13,7 +13,6 @@ public interface TrainingService {
     Training addTraining(Training training);
     int getStatistic();
     Type addType(Type type);
-    void defaultType();
     void deleteTraining(int id);
 
     Training updateTraining(User newUser, Training newTraining);
