@@ -20,4 +20,9 @@ public class TypeServiceImpl implements TypeService {
     public List<Type> getAllType() {
         return trainingTypeDAO.findAll();
     }
+
+    @Override
+    public Type addType(Type type) {
+        return trainingTypeDAO.save(type);
+    }
 }

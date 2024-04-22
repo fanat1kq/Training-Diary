@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
 @AllArgsConstructor
 public class SecurityDAOImpl implements SecurityDAO {
     private final ConnectionManager connectionProvider;
@@ -39,24 +41,7 @@ public class SecurityDAOImpl implements SecurityDAO {
         }
     }
 
-    /**
-     * create user
-     * @return User
-     */
-    @Override
-    public  User createUser(User user) {
-        String sql = "INSERT INTO app.users (login, password,role) VALUES (?, ?, ?)";
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, user.login);
-            statement.setString(2, user.password);
-            statement.setString(3, String.valueOf(user.role));
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Ошибка при регистрации игрока: " + e.getMessage());
-        }
-        return user;
-        }
+
     /**
      * add default user
      * @return User
@@ -68,6 +53,30 @@ public class SecurityDAOImpl implements SecurityDAO {
                 .role(Role.valueOf(resultSet.getString("role")))
                 .password(resultSet.getString("password"))
                 .build();
+    }
+
+    /**
+     * create user
+     * @return User
+     */
+    @Override
+    public  User save(User user) {
+        String sql = "INSERT INTO app.users (login, password,role) VALUES (?, ?, ?)";
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, user.login);
+            statement.setString(2, user.password);
+            statement.setString(3, String.valueOf(user.role));
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Ошибка при регистрации игрока: " + e.getMessage());
+        }
+        return user;
+    }
+/////////////
+    @Override
+    public List<User> findAll() {
+        return null;
     }
 }
 

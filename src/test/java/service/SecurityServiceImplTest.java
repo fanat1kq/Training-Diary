@@ -36,7 +36,7 @@ class SecurityServiceImplTest {
         String password = "password";
         User user = new User(login, password, Role.ADMIN);
         Mockito.when(userDAO.findByLogin(login)).thenReturn(null);
-        Mockito.when(userDAO.createUser(any(User.class))).thenReturn(user);
+        Mockito.when(userDAO.save(any(User.class))).thenReturn(user);
 
         User registerUser = securityService.createUser(user);
         assertEquals(login,registerUser.getLogin());

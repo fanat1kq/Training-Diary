@@ -25,24 +25,16 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public Training addTraining(Training training) {
-//        Training trainingByDate = trainingDAO.findByDate(training.getDate(), training.getType());
-//        if (trainingByDate!=null){
-//            throw new AlreadyExistException("Тренировка в этот день уже записана");
-//        }
+        Training trainingByDate = trainingDAO.findByDate(training.getDate(), training.getTypeId());
+        if (trainingByDate!=null){
+            throw new AlreadyExistException("Тренировка в этот день уже записана");
+        }
         return trainingDAO.addTraining(training);
     }
 
     @Override
     public int getStatistic() {
         return trainingDAO.getStatistic();
-    }
-
-
-
-    @Override
-    public Type addType(Type type) {
-
-        return trainingDAO.addType(type);
     }
 
     @Override
@@ -55,10 +47,6 @@ public class TrainingServiceImpl implements TrainingService {
         return trainingDAO.updateTraining(newUser,newTraining);
     }
 
-    @Override
-    public Extra addExtra(Extra extra) {
-        return trainingDAO.addExtra(extra);
-    }
 
 
 }

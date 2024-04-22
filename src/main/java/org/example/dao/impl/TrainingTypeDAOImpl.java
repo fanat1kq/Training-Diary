@@ -6,10 +6,7 @@ import org.example.dbconfig.ConnectionManager;
 import org.example.model.Training;
 import org.example.model.Type;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,10 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TrainingTypeDAOImpl implements TrainingTypeDAO {
     private final ConnectionManager connectionManager;
-    @Override
-    public Type save(Type entity) {
-        return null;
-    }
+
 
     @Override
     public List<Type> findAll() {
@@ -58,6 +52,45 @@ public class TrainingTypeDAOImpl implements TrainingTypeDAO {
             throw new RuntimeException("Failed to retrieve all users", e);
         }
     }
+
+    /**
+     * add type of Training
+     *
+     * @return
+     */
+    @Override
+    public Type save(Type type) {
+        String sqlSave = """
+                INSERT INTO app.training_type (type_name) VALUES (?)
+                """;
+
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlSave, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, type.getTypeName());
+            int affectedRows = preparedStatement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new RuntimeException("Failed to save training type");
+            }
+
+            ResultSet keys = preparedStatement.getGeneratedKeys();
+            if (keys.next()) {
+                type.setId(keys.getInt(1));
+            } else {
+                throw new RuntimeException("Failed to save meter type");
+            }
+            return type;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to save meter type", e);
+        }
+
+//        if (trainingType.contains(type)) {
+//            throw new AlreadyExistException("Данный тип тренировки уже существует");
+//        }
+//        trainingType.add(type);
+//        return trainingType;
+    }
+
     private Type buildTypeTraining(ResultSet resultSet) throws SQLException {
         return Type.builder()
                 .id(resultSet.getInt("id"))

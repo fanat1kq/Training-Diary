@@ -8,4 +8,5 @@ public interface TypeService {
     int getTypeId(String type);
 
     List<Type> getAllType();
+    Type addType(Type type);
 }

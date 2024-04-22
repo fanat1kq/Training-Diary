@@ -12,12 +12,12 @@ public interface TrainingService {
     List<Training> getTraining(int userId, Role role);
     Training addTraining(Training training);
     int getStatistic();
-    Type addType(Type type);
+
     void deleteTraining(int id);
 
     Training updateTraining(User newUser, Training newTraining);
 
-    Extra addExtra(Extra extra);
+
 
 
 }

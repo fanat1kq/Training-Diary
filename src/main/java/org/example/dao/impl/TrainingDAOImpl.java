@@ -26,31 +26,6 @@ import java.util.*;
 @AllArgsConstructor
 public class TrainingDAOImpl implements TrainingDAO {
     private final ConnectionManager connectionManager;
-    private final Map<Integer, Training> trainings = new HashMap<>();
-    public static List<String> trainingType = new ArrayList<>();
-
-
-    /**
-     * get data of training
-     *
-     * @param user data of user
-     * @return HashMap
-     */
-    @Override
-    public List<Map.Entry<Integer, Training>> getTraining(User user) {
-        if (user.getRole().equals(Role.ADMIN)) {
-            List<Map.Entry<Integer, Training>> list = new ArrayList<>(trainings.entrySet());
-            Collections.sort(list, Comparator.comparing(a -> a.getValue().getDate()));
-            return list;
-        } else for (Map.Entry<Integer, Training> entry : trainings.entrySet()) {
-            if (entry.getValue().getUserId() == user.getId()) {
-                List<Map.Entry<Integer, Training>> list = new ArrayList<>(trainings.entrySet());
-                Collections.sort(list, Comparator.comparing(a -> a.getValue().getDate()));
-                return list;
-            }
-        }
-        return null;
-    }
 
     /**
      * add data of training in HashMap
@@ -97,66 +72,23 @@ public class TrainingDAOImpl implements TrainingDAO {
      */
     @Override
     public int getStatistic() {
-//        int calorie = 0;
-//        for (Map.Entry<Integer, Training> entry : trainings.entrySet()) {
-//            LocalDate date = entry.getValue().getDate();
-//            LocalDate after = LocalDate.now().minusMonths(3);
-//            if (date.isAfter(after)) {
-//                calorie = entry.getValue().getCalorie();
-//                calorie++;
-//            }
-//        }
-//        System.out.println("Всего потрачено калорий за последние три месяца " + calorie);
-//        return calorie;
-        return 0;
-    }
-
-    /**
-     * add type of Training
-     *
-     * @return
-     */
-    @Override
-    public Type addType(Type type) {
-        String sqlSave = """
-                INSERT INTO app.training_type (type_name) VALUES (?)
+        String sqlStatic = """
+               	select SUM(calorie) from app.training WHERE date >= CURRENT_DATE - INTERVAL '3 months'
                 """;
-
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sqlSave, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, type.getTypeName());
-            int affectedRows = preparedStatement.executeUpdate();
-
-            if (affectedRows == 0) {
-                throw new RuntimeException("Failed to save training type");
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlStatic)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            int result= 0;
+            while (resultSet.next()) {
+                result = resultSet.getInt(1);
             }
-
-            ResultSet keys = preparedStatement.getGeneratedKeys();
-            if (keys.next()) {
-                type.setId(keys.getInt(1));
-            } else {
-                throw new RuntimeException("Failed to save meter type");
-            }
-            return type;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to save meter type", e);
+            return result;
+    } catch (SQLException e) {
+            throw new RuntimeException("Failed to get static");
         }
-
-//        if (trainingType.contains(type)) {
-//            throw new AlreadyExistException("Данный тип тренировки уже существует");
-//        }
-//        trainingType.add(type);
-//        return trainingType;
     }
 
-    /**
-     * default data of type training
-     */
-//    @Override
-//    public void defaultType() {
-//        trainingType.add("кардио");
-//        trainingType.add("подтягивания");
-//    }
+
 
     /**
      * delete training by id
@@ -178,23 +110,21 @@ public class TrainingDAOImpl implements TrainingDAO {
 
         /**
          * find training by id
-         *
          * @param date date of training
-         * @param type type of training
+         * @param typeId type id of training
          */
         @Override
-        public Training findByDate (LocalDate date, String type){
+        public Training findByDate (LocalDate date, int typeId){
             String sqlFindAllByUserId = """
-                SELECT * FROM app.training WHERE date = ? and type=?
+                SELECT * FROM app.training WHERE date = ? and type_id=?
                 """;
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlFindAllByUserId)) {
             preparedStatement.setDate(1, Date.valueOf(date));
+            preparedStatement.setInt(2, typeId);
             ResultSet resultSet = preparedStatement.executeQuery();
-
             Training result = null;
             while (resultSet.next()) {
-
                 result = buildTraining(resultSet);
             }
             return result;
@@ -205,19 +135,32 @@ public class TrainingDAOImpl implements TrainingDAO {
 
     @Override
     public Training updateTraining(User newUser, Training newTraining) {
-        for (Map.Entry<Integer, Training> entry : trainings.entrySet()) {
-            if (entry.getValue().getId() == newTraining.getId()) {
-                trainings.put(newTraining.getId(), newTraining);
-                break;
-            } else throw new NotFoundException("Такой тренировки нет");
+        String sqlUpdate = """
+                UPDATE app.training SET time = ?, calorie = ?, date = ?, user_id = ?, type_id = ?, extra_id = ?
+                 WHERE id = ?
+                """;
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlUpdate)) {
+            preparedStatement.setInt(1, newTraining.getTime());
+            preparedStatement.setInt(2, newTraining.getCalorie());
+            preparedStatement.setDate(3, Date.valueOf(newTraining.getDate()));
+            preparedStatement.setInt(4, newTraining.getUserId());
+            preparedStatement.setInt(5, newTraining.getTypeId());
+            preparedStatement.setInt(6, newTraining.getExtraId());
+            preparedStatement.setInt(7, newTraining.getId());
+            preparedStatement.executeUpdate();
+            return newTraining;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update training", e);
         }
-        return trainings.get(newTraining.getId());
+//            } else throw new NotFoundException("Такой тренировки нет");
     }
 
     @Override
     public List<Training> findAllByUserId(int userId) {
         String sqlFindByUserId = """
                 SELECT * FROM app.training where user_id = ?
+                ORDER BY date 
                 """;
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlFindByUserId)) {
@@ -238,6 +181,7 @@ public class TrainingDAOImpl implements TrainingDAO {
     public List<Training> findAll() {
         String sqlFindAll = """
                 SELECT * FROM app.training
+                 ORDER BY date
                 """;
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlFindAll)) {
@@ -252,34 +196,7 @@ public class TrainingDAOImpl implements TrainingDAO {
         }
     }
 
-    @Override
-    public Extra addExtra(Extra extra) {
-        String sqlSave = """
-                INSERT INTO app.training_extra (extra_name, value) VALUES (?,?)
-                """;
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sqlSave, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, extra.getName());
-            preparedStatement.setInt(2, extra.getValue());
-            int affectedRows = preparedStatement.executeUpdate();
 
-            if (affectedRows == 0) {
-                throw new RuntimeException("Failed to save training extra information");
-            }
-
-            ResultSet keys = preparedStatement.getGeneratedKeys();
-            if (keys.next()) {
-                extra.setId(keys.getInt(1));
-            } else {
-                throw new RuntimeException("Failed to save training extra information");
-            }
-
-            return extra;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to save extra information", e);
-        }
-
-    }
 
     private Training buildTraining(ResultSet resultSet) throws SQLException {
         return Training.builder()

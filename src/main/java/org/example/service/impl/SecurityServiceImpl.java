@@ -29,7 +29,7 @@ public class SecurityServiceImpl implements SecurityService {
         if (userByName!=null) {
             throw new RegisterException("Такой пользователь уже существует");
         }
-    return securityDAO.createUser(user);
+    return securityDAO.save(user);
     }
 
 }

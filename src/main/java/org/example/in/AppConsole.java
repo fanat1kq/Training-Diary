@@ -5,6 +5,7 @@ import org.example.dao.impl.TrainingDAOImpl;
 import org.example.dao.impl.SecurityDAOImpl;
 import org.example.dao.impl.TrainingTypeDAOImpl;
 import org.example.dbconfig.ConnectionManager;
+import org.example.exception.NotFoundException;
 import org.example.model.Extra;
 import org.example.model.Training;
 import org.example.model.Type;
@@ -90,7 +91,7 @@ public class AppConsole {
      * menu working with data of training
      *
      * @param user data of user
-     * @throws ParseException
+     * @throws ParseException exception
      */
     public void AppLoop(User user) throws ParseException {
         while (true) {
@@ -112,9 +113,17 @@ public class AppConsole {
                     System.out.println(mainController.getAllType());
                     System.out.println("Введите название типа тренировки из списка");
                     String type = scanner.nextLine();
-//                    if (!TrainingDAOImpl.trainingType.contains(type)){
-//                        throw new NotFoundException("Такого типа тренировки нет");
-//                    }
+                    boolean find = false;
+                    for (Type t:mainController.getAllType()) {
+                        String typeName = t.getTypeName();
+                        if (typeName.equals(type)){
+                            find= true;
+                            break;
+                        }
+                    }
+                    if (!find){
+                        throw new NotFoundException("Такого типа тренировки нет");
+                    }
                     int idType = mainController.getTypeId(type);
                     System.out.println("Введите длительность в минутах");
                     int time = Integer.parseInt(scanner.nextLine());
@@ -146,11 +155,14 @@ public class AppConsole {
                     System.out.println("Введите id тренировки для редактирования");
                     int id1 = Integer.parseInt(scanner.nextLine());
                     System.out.println("Введите название типа тренировки из списка");
-                    System.out.println(TrainingDAOImpl.trainingType);
+                    System.out.println(mainController.getAllType());
                     String type1 = scanner.nextLine();
-//                    if (!TrainingDAOImpl.trainingType.contains(type1)){
-//                        throw new NotFoundException("Такого типа тренировки нет");
-//                    }
+                    for (Type t:mainController.getAllType()) {
+                        String typeName = t.getTypeName();
+                        if (!typeName.equals(type1)){
+                            throw new NotFoundException("Такого типа тренировки нет");
+                        }
+                    }
                     int idType1 = mainController.getTypeId(type1);
                     System.out.println("Введите длительность в минутах");
                     int time1 = Integer.parseInt(scanner.nextLine());
@@ -171,7 +183,9 @@ public class AppConsole {
                     Training training1 = new Training(id1, user.getId(), time1, date1, calorie1, idType1, extra1.getId());
                     mainController.updateTraining(user, training1);
                 }
-                case 5 -> mainController.getStatistic();
+                case 5 -> {
+                    int calorie2 = mainController.getStatistic();
+                    System.out.println("Всего потрачено каларий " +calorie2+" за последние 3 месяца");}
                 case 6 -> {
                     System.out.println("Введите новый тип тренировки");
                     String type2 = scanner.nextLine().toLowerCase();

@@ -32,11 +32,6 @@ public class MainController {
         log.info("The user see calories for 3 month");
         return trainingService.getStatistic();
     }
-    public Type addType(Type type){
-        log.info("The user add new type training");
-        return trainingService.addType(type);
-    }
-
     public void deleteTraining(int id){
         log.info("The user delete training by id");
         trainingService.deleteTraining(id);
@@ -70,10 +65,15 @@ public class MainController {
         return trainingService.addExtra(extra);
     }
 
-    public int getTypeId(String type) {
-        return typeService.getTypeId(type);
+    public Type addType(Type type){
+        log.info("The user add new type training");
+        return typeService.addType(type);
     }
 
     public List<Type> getAllType() { return typeService.getAllType();
+    }
+
+    public int getTypeId(String type) {
+        return typeService.getTypeId(type);
     }
 }

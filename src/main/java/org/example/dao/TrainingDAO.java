@@ -10,19 +10,16 @@ import java.util.List;
 import java.util.Map;
 
 public interface TrainingDAO {
-    List<Map.Entry<Integer, Training>> getTraining(User user);
     Training addTraining(Training training);
     int getStatistic();
-    Type addType(Type type);
     void deleteTraining(int id);
 
-    Training findByDate(LocalDate date, String type);
+    Training findByDate(LocalDate date, int type);
 
     Training updateTraining(User newUser, Training newTraining);
     List<Training> findAllByUserId(int userId);
 
     List<Training> findAll();
 
-    Extra addExtra(Extra extra);
 
 }
