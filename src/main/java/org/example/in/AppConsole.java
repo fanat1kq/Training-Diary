@@ -27,19 +27,18 @@ import java.util.Scanner;
 
 public class AppConsole {
     static Scanner scanner = new Scanner(System.in);
-    static SecurityService securityService = new SecurityServiceImpl(new SecurityDAOImpl(new ConnectionManager()));
-    static TrainingService trainingService = new TrainingServiceImpl(new TrainingDAOImpl(new ConnectionManager()));
-    static TypeService typeService = new TypeServiceImpl(new TrainingTypeDAOImpl(new ConnectionManager()));
-    static ExtraService extraService = new ExtraServiceImpl(new ExtraDAOImpl(new ConnectionManager()));
+    static ConnectionManager connectionManager = new ConnectionManager();
+    static SecurityService securityService = new SecurityServiceImpl(new SecurityDAOImpl(connectionManager));
+    static TrainingService trainingService = new TrainingServiceImpl(new TrainingDAOImpl(connectionManager));
+    static TypeService typeService = new TypeServiceImpl(new TrainingTypeDAOImpl(connectionManager));
+    static ExtraService extraService = new ExtraServiceImpl(new ExtraDAOImpl(connectionManager));
 
     private static final MainController mainController = new MainController(trainingService, securityService, typeService, extraService);
-//    private static UserStage userStage;
 
     /**
      * main menu of App
      */
     public static void startApp() throws ParseException {
-//        userStage = UserStage.SECURITY;
         while (true) {
             final String startMenu = """
                     Внимание
@@ -53,7 +52,7 @@ public class AppConsole {
             switch (input) {
                 case 1 -> SecurityHandler.handleAuthorization(mainController);
                 case 2 -> SecurityHandler.handleRegistration(mainController);
-                case 3 -> SecurityHandler.exit();
+                case 3 -> exit();
             }
         }
     }
@@ -86,9 +85,14 @@ public class AppConsole {
                 case 5 -> MainHandler.handlerGetStatic(mainController);
                 case 6 -> MainHandler.handlerAddType(mainController);
                 case 7 -> startApp();
-                case 8 -> MainHandler.handlerExit();
+                case 8 -> exit();
             }
             }
+    }
+    public static void exit() {
+        System.out.println("До свидания!");
+        scanner.close();
+        System.exit(0);
     }
 
 }

@@ -72,9 +72,6 @@ public class MainHandler {
         String type2 = scanner.nextLine().toLowerCase();
         System.out.println(mainController.addType(Type.builder().typeName(type2).build()));
     }
-    public static void handlerExit() {
-        scanner.close();
-        System.exit(0);}
     public static Training inputTraining(User user, MainController mainController){
         System.out.println(mainController.getAllType());
         System.out.println("Введите название типа тренировки из списка");
@@ -107,8 +104,7 @@ public class MainHandler {
         System.out.println("Введите значение");
         int extraValue = Integer.parseInt(scanner.nextLine());
         Extra extra = mainController.addExtra(Extra.builder().name(extraName).value(extraValue).build());
-        Training training = Training.builder().userId(user.getId()).time(time).calorie(calorie).
+        return Training.builder().userId(user.getId()).time(time).calorie(calorie).
                 date(date).typeId(idType).extraId(extra.id).build();
-        return training;
     }
 }
