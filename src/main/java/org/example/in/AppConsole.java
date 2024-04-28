@@ -1,25 +1,24 @@
 package org.example.in;
 
 import org.example.controller.MainController;
+import org.example.dao.impl.ExtraDAOImpl;
 import org.example.dao.impl.TrainingDAOImpl;
 import org.example.dao.impl.SecurityDAOImpl;
 import org.example.dao.impl.TrainingTypeDAOImpl;
 import org.example.dbconfig.ConnectionManager;
-import org.example.exception.NotFoundException;
-import org.example.model.Extra;
-import org.example.model.Training;
-import org.example.model.Type;
+import org.example.handler.MainHandler;
+import org.example.handler.SecurityHandler;
 import org.example.model.User;
-import org.example.model.enumerates.Role;
+import org.example.service.ExtraService;
 import org.example.service.TrainingService;
 import org.example.service.SecurityService;
 import org.example.service.TypeService;
+import org.example.service.impl.ExtraServiceImpl;
 import org.example.service.impl.TrainingServiceImpl;
 import org.example.service.impl.SecurityServiceImpl;
 import org.example.service.impl.TypeServiceImpl;
 
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.Scanner;
 /**
  * Created by fanat1kq on 12/04/2024.
@@ -27,16 +26,20 @@ import java.util.Scanner;
  */
 
 public class AppConsole {
-    Scanner scanner = new Scanner(System.in);
+    static Scanner scanner = new Scanner(System.in);
     static SecurityService securityService = new SecurityServiceImpl(new SecurityDAOImpl(new ConnectionManager()));
     static TrainingService trainingService = new TrainingServiceImpl(new TrainingDAOImpl(new ConnectionManager()));
     static TypeService typeService = new TypeServiceImpl(new TrainingTypeDAOImpl(new ConnectionManager()));
-    private static final MainController mainController = new MainController(trainingService, securityService, typeService);
+    static ExtraService extraService = new ExtraServiceImpl(new ExtraDAOImpl(new ConnectionManager()));
+
+    private static final MainController mainController = new MainController(trainingService, securityService, typeService, extraService);
+//    private static UserStage userStage;
 
     /**
      * main menu of App
      */
-    public void startApp() throws ParseException {
+    public static void startApp() throws ParseException {
+//        userStage = UserStage.SECURITY;
         while (true) {
             final String startMenu = """
                     Внимание
@@ -48,41 +51,9 @@ public class AppConsole {
             System.out.println(startMenu);
             int input = Integer.parseInt(scanner.nextLine().toLowerCase());
             switch (input) {
-                case 1 -> {
-                    System.out.println("Введите логин и пароль:");
-                    String[] input1 = scanner.nextLine().split(" ");
-                    if (input1.length < 1) {
-                        System.out.println("невверный формат");
-                        continue;
-                    }
-                    String name = input1[0];
-                    String password = input1[1];
-                    User user = new User(name, password);
-                    User login = mainController.login(user);
-                    AppLoop(login);
-                }
-                case 2 -> {
-                    final String userExample = """
-                            Введите нового пользователя: логин, пароль и права доступа(user, admin)
-                            Пример: login 123 admin
-                            ввод производить через пробелы
-                            """;
-                    System.out.println(userExample);
-                    String[] input2 = scanner.nextLine().split(" ");
-                    if (input2.length < 3) {
-                        System.out.println("неверный формат");
-                        continue;
-                    }
-                    String name1 = input2[0];
-                    String password1 = input2[1];
-                    Role role = Role.valueOf(input2[2].toUpperCase());
-                    User user2 = new User(name1, password1, role);
-                    mainController.createUser(user2);
-                }
-                case 3 -> {
-                    scanner.close();
-                    System.exit(0);
-                }
+                case 1 -> SecurityHandler.handleAuthorization(mainController);
+                case 2 -> SecurityHandler.handleRegistration(mainController);
+                case 3 -> SecurityHandler.exit();
             }
         }
     }
@@ -93,7 +64,7 @@ public class AppConsole {
      * @param user data of user
      * @throws ParseException exception
      */
-    public void AppLoop(User user) throws ParseException {
+    public static void AppLoop(User user) throws ParseException {
         while (true) {
             final String loopMenu = """
                     1. Просмотреть тренировки
@@ -108,96 +79,16 @@ public class AppConsole {
             System.out.println(loopMenu);
             int input = Integer.parseInt(scanner.nextLine().toLowerCase());
             switch (input) {
-                case 1 -> System.out.println(mainController.getTraining(user));
-                case 2 -> {
-                    System.out.println(mainController.getAllType());
-                    System.out.println("Введите название типа тренировки из списка");
-                    String type = scanner.nextLine();
-                    boolean find = false;
-                    for (Type t:mainController.getAllType()) {
-                        String typeName = t.getTypeName();
-                        if (typeName.equals(type)){
-                            find= true;
-                            break;
-                        }
-                    }
-                    if (!find){
-                        throw new NotFoundException("Такого типа тренировки нет");
-                    }
-                    int idType = mainController.getTypeId(type);
-                    System.out.println("Введите длительность в минутах");
-                    int time = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Введите количество сженных калорий");
-                    int calorie = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Введите дату");
-                    System.out.println("Пример 10/04/1995");
-                    String[] in = scanner.nextLine().split("/");
-                    int day = Integer.parseInt(in[0]);
-                    int month = Integer.parseInt(in[1]);
-                    int year = Integer.parseInt(in[2]);
-                    LocalDate date = LocalDate.of(year, month, day);
-                    System.out.println("Добавьте дополнительную информацию");
-                    String extraName = scanner.nextLine();
-                    System.out.println("Введите значение");
-                    int extraValue = Integer.parseInt(scanner.nextLine());
-                    Extra extra = mainController.addExtra(Extra.builder().name(extraName).value(extraValue).build());
-                    Training training = Training.builder().userId(user.getId()).time(time).calorie(calorie).
-                            date(date).typeId(idType).extraId(extra.id).build();
-                    mainController.addTraining(training);
-                }
-                case 3 -> {
-                    System.out.println("Введите id тренировки для удаления");
-                    int id = Integer.parseInt(scanner.nextLine());
-                    mainController.deleteTraining(id);
-                }
-                case 4 -> {
-                    System.out.println();
-                    System.out.println("Введите id тренировки для редактирования");
-                    int id1 = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Введите название типа тренировки из списка");
-                    System.out.println(mainController.getAllType());
-                    String type1 = scanner.nextLine();
-                    for (Type t:mainController.getAllType()) {
-                        String typeName = t.getTypeName();
-                        if (!typeName.equals(type1)){
-                            throw new NotFoundException("Такого типа тренировки нет");
-                        }
-                    }
-                    int idType1 = mainController.getTypeId(type1);
-                    System.out.println("Введите длительность в минутах");
-                    int time1 = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Введите количество сженных калорий");
-                    int calorie1 = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Введите дату");
-                    System.out.println("Пример 10/04/1995");
-                    String[] in1 = scanner.nextLine().split("/");
-                    int day1 = Integer.parseInt(in1[0]);
-                    int month1 = Integer.parseInt(in1[1]);
-                    int year1 = Integer.parseInt(in1[2]);
-                    LocalDate date1 = LocalDate.of(year1, month1, day1);
-                    System.out.println("Добавьте дополнительную информацию");
-                    String extraName1 = scanner.nextLine();
-                    System.out.println("Введите значение");
-                    int extraValue1 = Integer.parseInt(scanner.nextLine());
-                    Extra extra1 = mainController.addExtra(Extra.builder().name(extraName1).value(extraValue1).build());
-                    Training training1 = new Training(id1, user.getId(), time1, date1, calorie1, idType1, extra1.getId());
-                    mainController.updateTraining(user, training1);
-                }
-                case 5 -> {
-                    int calorie2 = mainController.getStatistic();
-                    System.out.println("Всего потрачено каларий " +calorie2+" за последние 3 месяца");}
-                case 6 -> {
-                    System.out.println("Введите новый тип тренировки");
-                    String type2 = scanner.nextLine().toLowerCase();
-                    System.out.println(mainController.addType(Type.builder().typeName(type2).build()));
-                }
+                case 1 -> MainHandler.handlerGetTraining(user, mainController);
+                case 2 -> MainHandler.handlerGetAllType(user, mainController);
+                case 3 -> MainHandler.handlerDeleteTraining(mainController);
+                case 4 -> MainHandler.handlerUpdateTraining(user, mainController);
+                case 5 -> MainHandler.handlerGetStatic(mainController);
+                case 6 -> MainHandler.handlerAddType(mainController);
                 case 7 -> startApp();
-                case 8 -> {
-                    scanner.close();
-                    System.exit(0);
-                }
+                case 8 -> MainHandler.handlerExit();
             }
-        }
+            }
     }
 
 }

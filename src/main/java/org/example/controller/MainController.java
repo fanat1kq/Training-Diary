@@ -6,6 +6,7 @@ import org.example.model.Extra;
 import org.example.model.Training;
 import org.example.model.Type;
 import org.example.model.User;
+import org.example.service.ExtraService;
 import org.example.service.TrainingService;
 import org.example.service.SecurityService;
 import org.example.service.TypeService;
@@ -20,6 +21,7 @@ public class MainController {
     private final TrainingService trainingService;
     private final SecurityService securityService;
     private final TypeService typeService;
+    private final ExtraService extraService;
     public List<Training> getTraining(User user){
         log.info("The user with login " + user.getLogin() + " showing his training history");
         return trainingService.getTraining(user.getId(),user.getRole());
@@ -62,7 +64,7 @@ public class MainController {
 
     public Extra addExtra(Extra extra) {
         log.info("The user add new extra information of training");
-        return trainingService.addExtra(extra);
+        return extraService.addExtra(extra);
     }
 
     public Type addType(Type type){
