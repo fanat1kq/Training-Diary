@@ -1,0 +1,11 @@
+version: '3'
+services:
+  base-project-pg:
+    container_name: monitoring-service-db
+    image: postgres:14
+    environment:
+      POSTGRES_USER: nikita
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - '5432:5432'
