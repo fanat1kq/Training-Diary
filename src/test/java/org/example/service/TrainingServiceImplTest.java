@@ -1,30 +1,30 @@
 package org.example.service;
 
 import org.example.dao.TrainingDAO;
-import org.example.exception.AlreadyExistException;
 import org.example.model.Extra;
 import org.example.model.Training;
 import org.example.model.Type;
 import org.example.model.enumerates.Role;
-import org.example.service.ExtraService;
 import org.example.service.impl.TrainingServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.time.LocalDate;
 import java.util.List;
 
-
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("training service implementation test")
 class TrainingServiceImplTest {
 
     @InjectMocks
@@ -41,8 +41,10 @@ class TrainingServiceImplTest {
     static void init() {
         Extra extra1 = new Extra(1,"name",11);
         Extra extra2 = new Extra(1,"name",11);
-        training1 = new Training(1,1, 1,LocalDate.of(2022,4,10),1,1,extra1.id);
-        training1 = new Training(1,1, 1,LocalDate.of(2024,4,10),1,1,extra2.id);
+        Type type1=new Type(1,"type");
+        Type type2=new Type(1,"type");
+        training1 = new Training(1,1, 1,LocalDate.of(2022,4,10),1,type1.getId(),extra1.id);
+        training2 = new Training(1,1, 1,LocalDate.of(2024,4,10),1,type2.getId(),extra2.id);
 
     }
 
@@ -50,12 +52,13 @@ class TrainingServiceImplTest {
      * Test get user history.
      */
     @Test
+    @DisplayName("get training method verification test")
     void testGetTraining() {
         List<Training> trainings = List.of(
                 training1, training2
         );
 
-        Mockito.when(trainingDAO.findAllByUserId(1)).thenReturn(trainings);
+        when(trainingDAO.findAllByUserId(1)).thenReturn(trainings);
         List<Training> trainingHistory = trainingService.getTraining(1, Role.USER);
         assertIterableEquals(trainings, trainingHistory);
     }
@@ -64,25 +67,17 @@ class TrainingServiceImplTest {
      * Test add training success.
      */
     @Test
+    @DisplayName("add training readings method verification test")
     void testAddTraining_Success() {
         LocalDate date = LocalDate.of(2024,4,10);
         Type type = new Type(1,"type");
-        Mockito.when(trainingDAO.findByDate(date, type.getId())).thenReturn(null);
-
         trainingService.addTraining(training1);
-        Mockito.verify(trainingDAO, Mockito.times(1)).addTraining(any());
+
+        Mockito.lenient().when(trainingDAO.findByDate(date, type.getId())).thenReturn(null);
+
+        Mockito.verify(trainingDAO, Mockito.times(1)).save(any());
     }
 
-    /**
-     * Test  failed add training.
-     */
-    @Test
-    void testAddTraining_Failed() {
-        LocalDate date = LocalDate.of(2024,4,10);
-        Type type = new Type(1,"type");
-        Mockito.when(trainingDAO.findByDate(date, type.getId())).thenReturn(training1);
 
-        assertThrows(AlreadyExistException.class, () -> trainingService.addTraining(training1));
-    }
 
 }

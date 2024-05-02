@@ -1,16 +1,13 @@
 package org.example.dao.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+
 import org.example.dao.TrainingDAO;
 import org.example.dbconfig.ConnectionManager;
-import org.example.exception.NotFoundException;
-import org.example.model.Extra;
+
 import org.example.model.Training;
-import org.example.model.Type;
 import org.example.model.User;
-import org.example.model.enumerates.Role;
+
 
 import java.sql.Date;
 import java.sql.*;
@@ -20,7 +17,7 @@ import java.util.*;
 /**
  * Created by fanat1kq on 12/04/2024.
  * implements users, indications
- * using ArraList, Treemap//
+ * using ArrayList, Treemap//
  */
 
 @AllArgsConstructor
@@ -34,8 +31,7 @@ public class TrainingDAOImpl implements TrainingDAO {
      * @return HashMap
      */
     @Override
-    public Training addTraining(Training training) {
-
+    public Training save(Training training) {
         String sqlSave = """
                 INSERT INTO app.training (time, calorie, date, user_id, type_id, extra_id)
                 VALUES (?, ?, ?, ?, ?, ?)
@@ -73,8 +69,8 @@ public class TrainingDAOImpl implements TrainingDAO {
     @Override
     public int getStatistic() {
         String sqlStatic = """
-               	select SUM(calorie) from app.training WHERE date >= CURRENT_DATE - INTERVAL '3 months'
-                """;
+                	select SUM(calorie) from app.training WHERE date >= CURRENT_DATE - INTERVAL '3 months'
+        """;
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlStatic)) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -87,9 +83,6 @@ public class TrainingDAOImpl implements TrainingDAO {
             throw new RuntimeException("Failed to get static");
         }
     }
-
-
-
     /**
      * delete training by id
      */
@@ -99,7 +92,7 @@ public class TrainingDAOImpl implements TrainingDAO {
                 DELETE FROM app.training where id=?
                 """;
 
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlDelete)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
@@ -153,14 +146,13 @@ public class TrainingDAOImpl implements TrainingDAO {
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update training", e);
         }
-//            } else throw new NotFoundException("Такой тренировки нет");
     }
 
     @Override
     public List<Training> findAllByUserId(int userId) {
         String sqlFindByUserId = """
                 SELECT * FROM app.training where user_id = ?
-                ORDER BY date 
+                ORDER BY date
                 """;
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlFindByUserId)) {
@@ -176,7 +168,6 @@ public class TrainingDAOImpl implements TrainingDAO {
             return Collections.emptyList();
         }
     }
-
     @Override
     public List<Training> findAll() {
         String sqlFindAll = """

@@ -1,7 +1,7 @@
 package org.example.exception;
 
 /**
- * The type Type training already exists exception.
+ * The Type training already exists exception.
  */
 public class NotFoundException extends RuntimeException {
     /**

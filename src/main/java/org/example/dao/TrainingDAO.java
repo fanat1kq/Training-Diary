@@ -1,16 +1,12 @@
 package org.example.dao;
 
-import org.example.model.Extra;
 import org.example.model.Training;
-import org.example.model.Type;
 import org.example.model.User;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
-public interface TrainingDAO {
-    Training addTraining(Training training);
+public interface TrainingDAO extends MainDAO<Training> {
     int getStatistic();
     void deleteTraining(int id);
 

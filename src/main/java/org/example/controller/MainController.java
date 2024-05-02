@@ -1,7 +1,7 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.exception.NotValidParametrException;
+import org.example.exception.NotValidParameterException;
 import org.example.model.Extra;
 import org.example.model.Training;
 import org.example.model.Type;
@@ -46,11 +46,11 @@ public class MainController {
         log.info("The user trying to register with login " + user.getLogin() + " and password " + user.getPassword());
 
         if (user.getLogin() == null || user.getPassword() == null || user.getLogin().isEmpty() ||  user.getPassword().isEmpty()) {
-            throw new NotValidParametrException("Логин и пароль не могут быть пустыми");
+            throw new NotValidParameterException("Логин и пароль не могут быть пустыми");
         }
 
         if (user.getPassword().length() < 2 || user.getPassword().length() > 10) {
-            throw new NotValidParametrException("Длина пароля должна быть от 2 до 10 символов");
+            throw new NotValidParameterException("Длина пароля должна быть от 2 до 10 символов");
         }
 
         return securityService.createUser(user);

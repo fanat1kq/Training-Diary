@@ -14,7 +14,7 @@ import java.util.List;
 
 @AllArgsConstructor
 public class SecurityDAOImpl implements SecurityDAO {
-    private final ConnectionManager connectionProvider;
+    private final ConnectionManager connectionManager;
 
 
     /**
@@ -28,7 +28,7 @@ public class SecurityDAOImpl implements SecurityDAO {
         String sqlFindByLogin = """
                 SELECT * FROM app.users WHERE login = ?
                 """;
-        try (Connection connection = connectionProvider.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlFindByLogin)) {
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -49,7 +49,7 @@ public class SecurityDAOImpl implements SecurityDAO {
     @Override
     public  User save(User user) {
         String sql = "INSERT INTO app.users (login, password,role) VALUES (?, ?, ?)";
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.login);
             statement.setString(2, user.password);

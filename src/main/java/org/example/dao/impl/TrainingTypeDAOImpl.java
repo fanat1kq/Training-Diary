@@ -3,7 +3,6 @@ package org.example.dao.impl;
 import lombok.RequiredArgsConstructor;
 import org.example.dao.TrainingTypeDAO;
 import org.example.dbconfig.ConnectionManager;
-import org.example.model.Training;
 import org.example.model.Type;
 
 import java.sql.*;
@@ -56,7 +55,8 @@ public class TrainingTypeDAOImpl implements TrainingTypeDAO {
     /**
      * add type of Training
      *
-     * @return
+     * @return type type of training
+     * @param type type of training
      */
     @Override
     public Type save(Type type) {
@@ -64,7 +64,7 @@ public class TrainingTypeDAOImpl implements TrainingTypeDAO {
                 INSERT INTO app.training_type (type_name) VALUES (?)
                 """;
 
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlSave, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, type.getTypeName());
             int affectedRows = preparedStatement.executeUpdate();

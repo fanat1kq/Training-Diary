@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.example.dao.ExtraDAO;
 import org.example.dbconfig.ConnectionManager;
 import org.example.model.Extra;
-import org.example.model.Type;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,13 +12,13 @@ import java.sql.Statement;
 import java.util.List;
 @AllArgsConstructor
 public class ExtraDAOImpl implements ExtraDAO {
-    private final ConnectionManager connectionProvider;
+    private final ConnectionManager connectionManager;
     @Override
     public Extra save(Extra extra) {
         String sqlSave = """
                 INSERT INTO app.training_extra (extra_name, value) VALUES (?,?)
                 """;
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlSave, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, extra.getName());
             preparedStatement.setInt(2, extra.getValue());

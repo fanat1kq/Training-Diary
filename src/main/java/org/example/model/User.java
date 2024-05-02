@@ -5,7 +5,7 @@ import org.example.model.enumerates.Role;
 
 /**
  * Created by fanat1kq on 12/04/2024.
- * This class is responsible for autorizations of users
+ * This class is responsible for authorizations of users
  */
 @Data
 @NoArgsConstructor

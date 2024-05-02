@@ -6,10 +6,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 public abstract class PostgresTestContainer {
     public static final String IMAGE_VERSION = "postgres:14";
-    public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>(IMAGE_VERSION)
-            .withDatabaseName("postgres")
-            .withUsername("nikita")
-            .withPassword("postgres");
+    public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>(IMAGE_VERSION);
     @BeforeAll
     static void start() {
         container.start();

@@ -22,7 +22,7 @@ public class SecurityDAOImplTest extends PostgresTestContainer{
                 container.getUsername(),
                 container.getPassword()
         );
-        Liquibase liquibase=new Liquibase();
+        Liquibase liquibase=new Liquibase(connectionManager);
         liquibase.start();
 
         securityDAO = new SecurityDAOImpl(connectionManager);
@@ -41,17 +41,15 @@ public class SecurityDAOImplTest extends PostgresTestContainer{
     @Test
     @DisplayName("find by login method verification test")
     public void testFindByLogin() {
-        User userToSave = new User("Bob","password",Role.USER);
-
         User user = User.builder().login("Bob").password("password").role(Role.USER).build();
         securityDAO.save(user);
 
         User foundUser = securityDAO.findByLogin("Bob");
-//        assertTrue(foundUser != null);
+        assertNotNull(foundUser);
         assertEquals("Bob", foundUser.getLogin());
 
         User notFoundUser = securityDAO.findByLogin("NonExistentLogin");
-        assertFalse(notFoundUser != null);
+        assertNull(notFoundUser);
     }
 
 }

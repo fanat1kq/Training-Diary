@@ -1,8 +1,6 @@
 package org.example.service;
 
-import org.example.model.Extra;
 import org.example.model.Training;
-import org.example.model.Type;
 import org.example.model.User;
 import org.example.model.enumerates.Role;
 

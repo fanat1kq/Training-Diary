@@ -17,12 +17,12 @@ public class ConnectionManager {
     private static String PASSWORD = Config.getPassword();
 
     public ConnectionManager(String url, String username, String password) {
-        this.URL = url;
-        this.USERNAME = username;
-        this.PASSWORD = password;
+        URL = url;
+        USERNAME = username;
+        PASSWORD = password;
     }
 
-    public static Connection getConnection() {
+    public Connection getConnection() {
         try {
             return DriverManager.getConnection(URL, USERNAME, PASSWORD);
         } catch (SQLException e) {

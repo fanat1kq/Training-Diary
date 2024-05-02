@@ -3,9 +3,7 @@ package org.example.service.impl;
 import lombok.AllArgsConstructor;
 import org.example.dao.TrainingDAO;
 import org.example.exception.AlreadyExistException;
-import org.example.model.Extra;
 import org.example.model.Training;
-import org.example.model.Type;
 import org.example.model.User;
 import org.example.model.enumerates.Role;
 import org.example.service.TrainingService;
@@ -29,7 +27,7 @@ public class TrainingServiceImpl implements TrainingService {
         if (trainingByDate!=null){
             throw new AlreadyExistException("Тренировка в этот день уже записана");
         }
-        return trainingDAO.addTraining(training);
+        return trainingDAO.save(training);
     }
 
     @Override

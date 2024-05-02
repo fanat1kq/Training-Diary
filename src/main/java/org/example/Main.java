@@ -1,7 +1,7 @@
 package org.example;
 
+import org.example.dbconfig.LoadDB;
 import org.example.in.AppConsole;
-import org.example.liquibase.Liquibase;
 
 import java.text.ParseException;
 
@@ -10,10 +10,10 @@ import java.text.ParseException;
  */
 
 public class Main {
+
     public static void main(String[] args) throws ParseException {
-        Liquibase liquibase=new Liquibase();
-        liquibase.start();
-        AppConsole appConsole = new AppConsole();
-        appConsole.startApp();
+        LoadDB loadDB = new LoadDB();
+        loadDB.db();
+        AppConsole.startApp();
     }
 }

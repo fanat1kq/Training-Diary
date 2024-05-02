@@ -1,6 +1,6 @@
 package org.example.controller;
 
-import org.example.exception.NotValidParametrException;
+import org.example.exception.NotValidParameterException;
 import org.example.model.Training;
 import org.example.model.Type;
 import org.example.model.User;
@@ -63,7 +63,7 @@ class MainControllerTest {
         String login = "";
         String password = "password";
 
-        assertThrows(NotValidParametrException.class, () -> mainController.createUser(new User(login, password,Role.ADMIN)));
+        assertThrows(NotValidParameterException.class, () -> mainController.createUser(new User(login, password,Role.ADMIN)));
     }
 
     /**

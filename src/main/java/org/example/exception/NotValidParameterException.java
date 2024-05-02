@@ -3,13 +3,13 @@ package org.example.exception;
 /**
  * The type Authorize exception.
  */
-public class NotValidParametrException extends RuntimeException {
+public class NotValidParameterException extends RuntimeException {
     /**
      * Instantiates a new Authorize exception.
      *
      * @param message the message
      */
-    public NotValidParametrException(String message) {
+    public NotValidParameterException(String message) {
         super(message);
     }
 }
