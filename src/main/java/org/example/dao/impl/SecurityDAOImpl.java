@@ -43,19 +43,6 @@ public class SecurityDAOImpl implements SecurityDAO {
 
 
     /**
-     * add default user
-     * @return User
-     */
-    private User buildUser(ResultSet resultSet) throws SQLException {
-        return User.builder()
-                .id(resultSet.getInt("id"))
-                .login(resultSet.getString("login"))
-                .role(Role.valueOf(resultSet.getString("role")))
-                .password(resultSet.getString("password"))
-                .build();
-    }
-
-    /**
      * create user
      * @return User
      */
@@ -73,10 +60,23 @@ public class SecurityDAOImpl implements SecurityDAO {
         }
         return user;
     }
-/////////////
+
+    /////////////
     @Override
     public List<User> findAll() {
         return null;
+    }
+    /**
+     * add default user
+     * @return User
+     */
+    private User buildUser(ResultSet resultSet) throws SQLException {
+        return User.builder()
+                .id(resultSet.getInt("id"))
+                .login(resultSet.getString("login"))
+                .role(Role.valueOf(resultSet.getString("role")))
+                .password(resultSet.getString("password"))
+                .build();
     }
 }
 

@@ -1,4 +1,4 @@
-package service;
+package org.example.service;
 
 import org.example.model.enumerates.Role;
 import org.example.service.impl.SecurityServiceImpl;

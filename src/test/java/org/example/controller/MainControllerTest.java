@@ -1,12 +1,11 @@
-package controller;
+package org.example.controller;
 
-import org.example.controller.MainController;
 import org.example.exception.NotValidParametrException;
-import org.example.model.Extra;
 import org.example.model.Training;
 import org.example.model.Type;
 import org.example.model.User;
 import org.example.model.enumerates.Role;
+import org.example.service.SecurityService;
 import org.example.service.TrainingService;
 import org.example.service.TypeService;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.example.service.SecurityService;
 
 import java.time.LocalDate;
 

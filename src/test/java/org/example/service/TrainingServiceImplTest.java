@@ -1,4 +1,4 @@
-package service;
+package org.example.service;
 
 import org.example.dao.TrainingDAO;
 import org.example.exception.AlreadyExistException;
