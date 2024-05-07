@@ -51,5 +51,9 @@ public class Config {
     public static String getChangeLogFile() {
         return properties.getProperty("liquibase.changeLogFile");
     }
+    public static String getDriver() {
+        return properties.getProperty("db.driver");
+    }
+
 
 }

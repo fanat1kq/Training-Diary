@@ -1,6 +1,5 @@
 package org.example.dao.impl;
 
-import lombok.AllArgsConstructor;
 import org.example.dao.ExtraDAO;
 import org.example.dbconfig.ConnectionManager;
 import org.example.model.Extra;
@@ -10,9 +9,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
-@AllArgsConstructor
+
 public class ExtraDAOImpl implements ExtraDAO {
     private final ConnectionManager connectionManager;
+
+    public ExtraDAOImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
+
     @Override
     public Extra save(Extra extra) {
         String sqlSave = """

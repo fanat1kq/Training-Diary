@@ -20,9 +20,13 @@ import java.util.*;
  * using ArrayList, Treemap//
  */
 
-@AllArgsConstructor
+
 public class TrainingDAOImpl implements TrainingDAO {
     private final ConnectionManager connectionManager;
+
+    public TrainingDAOImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
 
     /**
      * add data of training in HashMap

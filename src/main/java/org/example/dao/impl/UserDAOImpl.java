@@ -1,10 +1,9 @@
 package org.example.dao.impl;
 
-import lombok.AllArgsConstructor;
-import org.example.dao.SecurityDAO;
+import org.example.dao.UserDAO;
 import org.example.dbconfig.ConnectionManager;
-import org.example.model.enumerates.Role;
 import org.example.model.User;
+import org.example.model.enumerates.Role;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,10 +11,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-@AllArgsConstructor
-public class SecurityDAOImpl implements SecurityDAO {
+public class UserDAOImpl implements UserDAO {
     private final ConnectionManager connectionManager;
 
+    public UserDAOImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
 
     /**
      * login

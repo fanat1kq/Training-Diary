@@ -1,15 +1,18 @@
 package org.example.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import org.example.dao.TrainingTypeDAO;
 import org.example.model.Type;
 import org.example.service.TypeService;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+
 public class TypeServiceImpl implements TypeService {
     private final TrainingTypeDAO trainingTypeDAO;
+
+    public TypeServiceImpl(TrainingTypeDAO trainingTypeDAO) {
+        this.trainingTypeDAO = trainingTypeDAO;
+    }
 
     @Override
     public int getTypeId(String type) {

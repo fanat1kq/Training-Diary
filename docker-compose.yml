@@ -1,7 +1,7 @@
 version: '3'
 services:
-  base-project-pg:
-    container_name: monitoring-service-db
+  db:
+    container_name: training-diary-db
     image: postgres:14
     environment:
       POSTGRES_USER: nikita

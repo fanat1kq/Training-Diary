@@ -10,10 +10,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@RequiredArgsConstructor
+
 public class TrainingTypeDAOImpl implements TrainingTypeDAO {
     private final ConnectionManager connectionManager;
 
+    public TrainingTypeDAOImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
 
     @Override
     public List<Type> findAll() {
