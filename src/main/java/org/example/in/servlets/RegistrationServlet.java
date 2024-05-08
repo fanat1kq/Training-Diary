@@ -43,19 +43,4 @@ public class RegistrationServlet extends HttpServlet {
         }
     }
 
-    public SecurityService getSecurityService() {
-        return securityService;
-    }
-
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
-    }
-
-    public ObjectMapper getJacksonMapper() {
-        return jacksonMapper;
-    }
-
-    public void setJacksonMapper(ObjectMapper jacksonMapper) {
-        this.jacksonMapper = jacksonMapper;
-    }
 }

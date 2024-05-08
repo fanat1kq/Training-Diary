@@ -5,21 +5,21 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import org.example.dao.ExtraDAO;
 import org.example.dao.TrainingDAO;
+import org.example.dao.TrainingTypeDAO;
 import org.example.dao.UserDAO;
+import org.example.dao.impl.ExtraDAOImpl;
 import org.example.dao.impl.TrainingDAOImpl;
+import org.example.dao.impl.TrainingTypeDAOImpl;
 import org.example.dao.impl.UserDAOImpl;
 import org.example.dbconfig.ConnectionManager;
 import org.example.in.mappers.TrainingMapper;
 import org.example.in.mappers.UserMapper;
 import org.example.in.security.JwtTokenProvider;
 import org.example.liquibase.Liquibase;
-import org.example.service.SecurityService;
-import org.example.service.TrainingService;
-import org.example.service.UserService;
-import org.example.service.impl.SecurityServiceImpl;
-import org.example.service.impl.TrainingServiceImpl;
-import org.example.service.impl.UserServiceImpl;
+import org.example.service.*;
+import org.example.service.impl.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -79,6 +79,8 @@ import java.util.Properties;
     private void serviceContextInit(ServletContext servletContext) {
         UserDAO userDAO = new UserDAOImpl(connectionManager);
         TrainingDAO trainingDAO = new TrainingDAOImpl(connectionManager);
+        TrainingTypeDAO trainingTypeDAO = new TrainingTypeDAOImpl(connectionManager);
+        ExtraDAO extraDAO = new ExtraDAOImpl(connectionManager);
 
         UserService userService = new UserServiceImpl(userDAO);
         JwtTokenProvider tokenProvider = new JwtTokenProvider(
@@ -90,12 +92,15 @@ import java.util.Properties;
 
         SecurityService securityService = new SecurityServiceImpl(userDAO, tokenProvider);
         TrainingService trainingService = new TrainingServiceImpl(trainingDAO);
-
+        TypeService typeService = new TypeServiceImpl(trainingTypeDAO);
+        ExtraService extraService = new ExtraServiceImpl(extraDAO);
 
         servletContext.setAttribute("tokenProvider", tokenProvider);
         servletContext.setAttribute("securityService", securityService);
         servletContext.setAttribute("userService", userService);
         servletContext.setAttribute("readingService", trainingService);
+        servletContext.setAttribute("typeService", typeService);
+        servletContext.setAttribute("extraService", extraService);
     }
 
 
