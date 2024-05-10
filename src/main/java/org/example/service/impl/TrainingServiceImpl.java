@@ -2,6 +2,9 @@ package org.example.service.impl;
 
 import org.example.dao.TrainingDAO;
 import org.example.exception.AlreadyExistException;
+import org.example.exception.NotValidParameterException;
+import org.example.in.dto.AddTrainingRequest;
+import org.example.in.dto.UpdateTrainingRequest;
 import org.example.model.Training;
 import org.example.model.User;
 import org.example.model.enumerates.Role;
@@ -25,7 +28,12 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
-    public Training addTraining(Training training) {
+    public Training addTraining(AddTrainingRequest request, int userId) {
+        if (request.getTime()< 0 | request.getCalorie()<0 | request.getExtraId()<0 | request.getTypeId()<0 | userId<0)
+            throw new NotValidParameterException("must not be negative.");
+        Training training = Training.builder().time(request.getTime()).calorie(request.getCalorie()).
+                date(request.getDate()).extraId(request.getExtraId()).typeId(request.getTypeId()).
+                userId(userId).build();
         Training trainingByDate = trainingDAO.findByDate(training.getDate(), training.getTypeId());
         if (trainingByDate!=null){
             throw new AlreadyExistException("Тренировка в этот день уже записана");
@@ -40,11 +48,18 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public void deleteTraining(int id) {
+        if (id < 0) throw new NotValidParameterException("must not be negative.");
         trainingDAO.deleteTraining(id);
     }
 
     @Override
-    public Training updateTraining(User newUser, Training newTraining) {
+    public Training updateTraining(User newUser, UpdateTrainingRequest request) {
+        if (request.getTime()< 0 | request.getCalorie()<0 | request.getExtraId()<0 | request.getTypeId()<0 | request.getUserId()<0)
+            throw new NotValidParameterException("must not be negative.");
+        Training newTraining = Training.builder().id(request.getId()).
+                time(request.getTime()).calorie(request.getCalorie()).
+                date(request.getDate()).extraId(request.getExtraId()).
+                typeId(request.getTypeId()).userId(request.getId()).build();
         return trainingDAO.updateTraining(newUser,newTraining);
     }
 

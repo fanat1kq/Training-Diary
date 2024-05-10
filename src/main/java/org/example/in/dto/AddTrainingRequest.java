@@ -18,7 +18,6 @@ public class AddTrainingRequest {
     public int calorie;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     public LocalDate date;
-    public int userId;
     public int typeId;
     public int extraId;
 }

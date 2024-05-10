@@ -1,13 +1,12 @@
 package org.example.dao.impl;
 
 import org.example.dao.ExtraDAO;
-import org.example.dbconfig.ConnectionManager;
+import org.example.utils.ConnectionManager;
 import org.example.model.Extra;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ExtraDAOImpl implements ExtraDAO {
@@ -46,6 +45,26 @@ public class ExtraDAOImpl implements ExtraDAO {
     }
     @Override
     public List<Extra> findAll() {
-        return null;
+        String sqlFindAll = """
+                SELECT * FROM app.training_extra
+                """;
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlFindAll)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Extra> trainingExtra = new ArrayList<>();
+            while (resultSet.next()) {
+                trainingExtra.add(buildExtraTraining(resultSet));
+            }
+            return trainingExtra;
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+    private Extra buildExtraTraining(ResultSet resultSet) throws SQLException {
+        return Extra.builder()
+                .id(resultSet.getInt("id"))
+                .name(resultSet.getString("extra_name"))
+                .value(resultSet.getInt("value"))
+                .build();
     }
 }

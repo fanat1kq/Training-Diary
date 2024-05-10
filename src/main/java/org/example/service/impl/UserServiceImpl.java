@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
     public User getByLogin(String login) {
         User user = userDAO.findByLogin(login);
         if (user == null) {
-        throw new NotFoundException("Player with login " + login + " not found!");
+        throw new NotFoundException("User with login " + login + " not found!");
         }
         return user;
     }

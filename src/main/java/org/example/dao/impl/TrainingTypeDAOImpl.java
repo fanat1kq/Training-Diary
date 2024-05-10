@@ -1,8 +1,7 @@
 package org.example.dao.impl;
 
-import lombok.RequiredArgsConstructor;
 import org.example.dao.TrainingTypeDAO;
-import org.example.dbconfig.ConnectionManager;
+import org.example.utils.ConnectionManager;
 import org.example.model.Type;
 
 import java.sql.*;

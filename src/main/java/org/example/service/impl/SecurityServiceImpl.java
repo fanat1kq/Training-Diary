@@ -22,16 +22,6 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public JwtResponse authorization(User user) {
-
-//        User userByName = securityDAO.findByLogin(user.getLogin());
-//        if (userByName==null) {
-//            throw new AuthorizeException("Такого пользователя не существует");
-//        }
-//        if (!userByName.getPassword().equals(user.getPassword())) {
-//            throw new AuthorizeException("Не правильный пароль");
-//        }
-//
-//        return userByName;
         String accessToken = tokenProvider.createAccessToken(user.login);
         String refreshToken = tokenProvider.createRefreshToken(user.login);
         try {

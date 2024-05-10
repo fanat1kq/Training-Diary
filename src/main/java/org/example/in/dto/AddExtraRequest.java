@@ -9,7 +9,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CaloriesStaticResponse {
-    private String userLogin;
-    private int calories;
+public class AddExtraRequest {
+    public String name;
+    public int value;
+
 }

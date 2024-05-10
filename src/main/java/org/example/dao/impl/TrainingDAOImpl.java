@@ -1,9 +1,7 @@
 package org.example.dao.impl;
 
-import lombok.AllArgsConstructor;
-
 import org.example.dao.TrainingDAO;
-import org.example.dbconfig.ConnectionManager;
+import org.example.utils.ConnectionManager;
 
 import org.example.model.Training;
 import org.example.model.User;

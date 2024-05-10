@@ -13,9 +13,6 @@ public class Authentication {
         return isAuth;
     }
 
-    public Authentication() {
-    }
-
     public Authentication(String login, boolean isAuth, String message) {
         this.login = login;
         this.isAuth = isAuth;

@@ -1,4 +1,4 @@
-package org.example.dbconfig;
+package org.example.utils;
 
 import java.io.IOException;
 import java.io.InputStream;

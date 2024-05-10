@@ -31,7 +31,6 @@ public class RegistrationServlet extends HttpServlet {
         try(ServletInputStream inputStream = req.getInputStream()) {
             SecurityDTO securityDTO = jacksonMapper.readValue(inputStream, SecurityDTO.class);
             User registered = securityService.register(new User(securityDTO.login(), securityDTO.password(),securityDTO.role()));
-
             resp.setStatus(HttpServletResponse.SC_CREATED);
             jacksonMapper.writeValue(resp.getWriter(), new SuccessResponse("User with login " + registered.getLogin() + " successfully created."));
         } catch (RegisterException | JsonParseException e) {

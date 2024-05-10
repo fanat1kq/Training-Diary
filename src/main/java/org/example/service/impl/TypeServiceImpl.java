@@ -1,6 +1,8 @@
 package org.example.service.impl;
 
 import org.example.dao.TrainingTypeDAO;
+import org.example.exception.NotValidParameterException;
+import org.example.in.dto.AddTypeRequest;
 import org.example.model.Type;
 import org.example.service.TypeService;
 
@@ -23,9 +25,10 @@ public class TypeServiceImpl implements TypeService {
     public List<Type> getAllType() {
         return trainingTypeDAO.findAll();
     }
-
     @Override
-    public Type addType(Type type) {
+    public Type addType(AddTypeRequest request) {
+        if (request.type == null) throw new NotValidParameterException("Type can not be empty");
+        Type type = Type.builder().typeName(request.type).build();
         return trainingTypeDAO.save(type);
     }
 }

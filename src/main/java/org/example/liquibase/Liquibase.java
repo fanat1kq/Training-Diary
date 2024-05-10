@@ -4,8 +4,8 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
-import org.example.dbconfig.Config;
-import org.example.dbconfig.ConnectionManager;
+import org.example.utils.Config;
+import org.example.utils.ConnectionManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;

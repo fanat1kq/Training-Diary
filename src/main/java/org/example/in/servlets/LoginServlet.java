@@ -2,7 +2,6 @@ package org.example.in.servlets;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,21 +23,17 @@ public class LoginServlet extends HttpServlet {
     private ObjectMapper jacksonMapper;
 
     @Override
-    public void init() throws ServletException {
+    public void init()  {
         securityService = (SecurityService) getServletContext().getAttribute("securityService");
         jacksonMapper = (ObjectMapper) getServletContext().getAttribute("jacksonMapper");
     }
-
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
         try(ServletInputStream inputStream = req.getInputStream()) {
-            //передача с json через дто
             SecurityDTO securityDTO = jacksonMapper.readValue(inputStream, SecurityDTO.class);
-            //авторизация с токен
             JwtResponse response = securityService.authorization(new User(securityDTO.login(), securityDTO.password()));
-            //вывод все ок
             resp.setStatus(HttpServletResponse.SC_ACCEPTED);
-            jacksonMapper.writeValue(resp.getWriter(), response);//сериализация ответа
+            jacksonMapper.writeValue(resp.getWriter(), response);
         } catch (JsonParseException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             jacksonMapper.writeValue(resp.getWriter(), new ExceptionResponse(e.getMessage()));

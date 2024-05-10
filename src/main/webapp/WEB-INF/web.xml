@@ -28,4 +28,8 @@
         <filter-name>JwtTokenFilter</filter-name>
         <url-pattern>/type/*</url-pattern>
     </filter-mapping>
+    <filter-mapping>
+        <filter-name>JwtTokenFilter</filter-name>
+        <url-pattern>/extra/*</url-pattern>
+    </filter-mapping>
 </web-app>

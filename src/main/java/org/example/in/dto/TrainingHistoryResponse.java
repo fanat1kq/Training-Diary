@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-//для отображения всех записей(на сервлет с json)
 public class TrainingHistoryResponse {
 
     private String userLogin;
