@@ -23,4 +23,9 @@
         <filter-name>JwtTokenFilter</filter-name>
         <url-pattern>/training/*</url-pattern>
     </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>JwtTokenFilter</filter-name>
+        <url-pattern>/type/*</url-pattern>
+    </filter-mapping>
 </web-app>

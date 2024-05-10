@@ -6,12 +6,13 @@ import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
-
 @Data
 public class TrainingDTO {
-
-    private String name;
-    private Integer value;
+    private int id;
+    private int time;
+    private int calorie;
     private LocalDate date;
-
+    private int userId;
+    private int typeId;
+    private int extraId;
 }

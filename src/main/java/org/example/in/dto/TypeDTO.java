@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.model.Type;
 
 import java.util.List;
 
@@ -11,9 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-//для отображения всех записей(на сервлет с json)
-public class TrainingHistoryResponse {
-
-    private String userLogin;
-    private List<TrainingDTO> training;
+public class TypeDTO {
+    private List<TypeDTO> type;
 }

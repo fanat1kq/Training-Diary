@@ -11,5 +11,5 @@ import org.example.model.Type;
 @Getter
 @Setter
 public class AddTypeRequest {
-    public Type type;
+    public String type;
 }

@@ -15,6 +15,7 @@ import org.example.in.dto.*;
 import org.example.in.mappers.TrainingMapper;
 import org.example.in.security.Authentication;
 import org.example.model.Training;
+import org.example.model.Type;
 import org.example.model.User;
 import org.example.service.ExtraService;
 import org.example.service.TrainingService;
@@ -24,8 +25,8 @@ import org.example.service.UserService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/training/*")
-public class TrainingServlet extends HttpServlet {
+@WebServlet("/type/*")
+public class TrainingTypeServlet extends HttpServlet {
 
     private UserService userService;
     private TrainingService trainingService;
@@ -41,19 +42,17 @@ public class TrainingServlet extends HttpServlet {
         trainingMapper = (TrainingMapper) getServletContext().getAttribute("trainingMapper");
         typeService = (TypeService) getServletContext().getAttribute("typeService");
         extraService= (ExtraService) getServletContext().getAttribute("extraService");
+//        trainingTypeMapper = (TrainingTypeMapper) getServletContext().getAttribute("trainingTypeMapper");
+
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Authentication authentication = (Authentication) getServletContext().getAttribute("authentication");
-
         if (authentication.isAuth()) {
             try {
-                if (req.getRequestURI().endsWith("/history")) {
-                    showTrainingHistory(req, resp, authentication);
-                }
-                else if (req.getRequestURI().endsWith("/calorie")) {
-                    showCaloriesStatics(req, resp, authentication);
+                if (req.getRequestURI().endsWith("/get")) {
+                    getTypes(req, resp, authentication);
                 }
             } catch (NotFoundException | NotValidParameterException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -82,20 +81,8 @@ public class TrainingServlet extends HttpServlet {
                 if (!authentication.getLogin().equals(user.getLogin())) throw new AuthorizeException("Incorrect credentials.");
                 String requestURI = req.getRequestURI();//что в юрл запостили
                 if (requestURI.endsWith("/add")) {
-                    AddTrainingRequest request = jacksonMapper.readValue(inputStream, AddTrainingRequest.class);//получение с Json(десер-я)
-                    requestValidation(); //проверка объекта
-                    trainingService.addTraining(Training.builder().time(request.getTime()).calorie(request.getCalorie()).
-                            date(request.getDate()).extraId(request.getExtraId()).typeId(request.getTypeId()).
-                            userId(user.getId()).build());//вызов метода
-                } else if (requestURI.endsWith("/update")) {
-                    UpdateTrainingRequest updateRequest = jacksonMapper.readValue(inputStream, UpdateTrainingRequest.class);//получение с Json(десер-я)
-                    trainingService.updateTraining(user,Training.builder().id(updateRequest.getId()).
-                            time(updateRequest.getTime()).calorie(updateRequest.getCalorie()).
-                            date(updateRequest.getDate()).extraId(updateRequest.getExtraId()).
-                            typeId(updateRequest.getTypeId()).userId(updateRequest.getId()).build());//вызов метода
-                } else if (requestURI.endsWith("/delete")) {
-                    ActionRequest actionRequest = jacksonMapper.readValue(inputStream, ActionRequest.class);//получение с Json(десер-я)
-                    trainingService.deleteTraining(actionRequest.id());//вызов метода
+                    AddTypeRequest typeRequest = jacksonMapper.readValue(inputStream, AddTypeRequest.class);
+                    typeService.addType(Type.builder().typeName(typeRequest.type).build());
                 }
                 resp.setStatus(HttpServletResponse.SC_OK);
                 jacksonMapper.writeValue(resp.getWriter(), new SuccessResponse("action completed successfully!"));//если удачно
@@ -123,17 +110,17 @@ public class TrainingServlet extends HttpServlet {
 //        }
     }
 
-    private void showTrainingHistory(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws NotValidParameterException, IOException {
+    private void getTypes(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws NotValidParameterException, IOException {
         String login = req.getParameter("login");
         if (login == null) throw new NotValidParameterException("Login parameter is null!");
         User entity = userService.getByLogin(login);
         if (!authentication.getLogin().equals(entity.getLogin())) throw new AuthorizeException("Incorrect credentials.");
 
-        List<Training> userHistory = trainingService.getTraining(entity.getId(),entity.getRole());
-        TrainingHistoryResponse response = new TrainingHistoryResponse(entity.getLogin(), trainingMapper.toDTOList(userHistory));
+        List<Type> typeHistory = typeService.getAllType();
+//        TypeDTO response = new TypeDTO(trainingTypeMapper.toDTOList(typeHistory));
 
         resp.setStatus(HttpServletResponse.SC_OK);
-        jacksonMapper.writeValue(resp.getWriter(), response);
+        jacksonMapper.writeValue(resp.getWriter(), typeHistory);
     }
     private void showCaloriesStatics(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws IOException {
         String login = req.getParameter("login");
