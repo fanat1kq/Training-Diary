@@ -1,8 +1,8 @@
 package org.example.service;
 
-import org.example.model.User;
+import org.example.model.Users;
 
 public interface UserService {
-    User getByLogin(String login);
+    Users getByLogin(String login);
 
 }

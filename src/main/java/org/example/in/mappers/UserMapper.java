@@ -1,17 +1,20 @@
 package org.example.in.mappers;
 
 import org.example.in.dto.UserDTO;
-import org.example.model.User;
+import org.example.model.Users;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 
-@Mapper
+
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+    /**
+     * Mapping player entity to dto
+     *
+     * @param entity the player entity
+     * @return mapped player dto
+     */
+    UserDTO toDto(Users entity);
 
-    UserDTO toDto(User entity);
-
-    User toEntity(UserDTO dto);
 }

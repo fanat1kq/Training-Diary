@@ -1,33 +1,47 @@
 package org.example.in.security;
 
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpServletRequest;
+import io.jsonwebtoken.ExpiredJwtException;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.GenericFilterBean;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@WebFilter
-public class JwtTokenFilter implements Filter {
+
+/**
+ * Jwt token filter for authentication
+ */
+@AllArgsConstructor
+@NoArgsConstructor
+public class JwtTokenFilter extends GenericFilterBean {
 
     private JwtTokenProvider jwtTokenProvider;
-    private ServletContext servletContext;
+
+    /**
+     * Validate jwt token and authentication player
+     *
+     * @throws IOException asd
+     * @throws ServletException asd
+     * @throws ExpiredJwtException asd
+     */
     @Override
-    public void init(FilterConfig filterConfig){
-        this.servletContext = filterConfig.getServletContext();
-        jwtTokenProvider = (JwtTokenProvider) servletContext.getAttribute("tokenProvider");
-    }
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        String bearerToken = ((HttpServletRequest)servletRequest).getHeader("Authorization");
-        try {
-            if (bearerToken != null && bearerToken.startsWith("Bearer ") && jwtTokenProvider.validateToken(bearerToken.substring(7))) {
-                Authentication authentication = jwtTokenProvider.authentication(bearerToken.substring(7));
-                servletContext.setAttribute("authentication", authentication);
-            } else {
-                servletContext.setAttribute("authentication", new Authentication(null, false, "Bearer token is null or invalid!"));
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException, ExpiredJwtException {
+        String bearerToken = ((HttpServletRequest) servletRequest).getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            bearerToken = bearerToken.substring(7);
+        }
+        if (bearerToken != null && jwtTokenProvider.validateToken(bearerToken)) {
+            Authentication authentication = jwtTokenProvider.authentication(bearerToken);
+            if (authentication != null) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (RuntimeException e) {
-            servletContext.setAttribute("authentication", new Authentication(null, false, e.getMessage()));
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

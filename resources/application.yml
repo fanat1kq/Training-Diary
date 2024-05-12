@@ -1,0 +1,18 @@
+datasource:
+  url: jdbc:postgresql://localhost:5432/postgres
+  username: nikita
+  password: postgres
+  driver-class-name: org.postgresql.Driver
+
+liquibase:
+  change-log: classpath:db/changelog/changelog.xml
+  liquibase-schema: app
+jpa:
+  hibernate:
+    ddl-auto: validate
+    dialect: org.hibernate.dialect.PostgreSQL95Dialect
+
+jwt:
+  secret: c3VwZXJwdXBlcmR1cGVybWVnYWhhcmRvdmVydG9waGlnaHNlY3JldA==
+  access: 3600000
+  refresh: 2592000000
