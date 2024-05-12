@@ -82,15 +82,15 @@ public class TrainingServlet extends HttpServlet {
                 User user = loginValidation(req,authentication);
                 String requestURI = req.getRequestURI();
                 if (requestURI.endsWith(ADD)) {
-                    AddTrainingRequest request = jacksonMapper.readValue(inputStream, AddTrainingRequest.class);//получение с Json(десер-я)
+                    AddTrainingRequest request = jacksonMapper.readValue(inputStream, AddTrainingRequest.class);
                     trainingService.addTraining(request, user.getId());
                     success(resp);
                 } else if (requestURI.endsWith(UPDATE)) {
-                    UpdateTrainingRequest updateRequest = jacksonMapper.readValue(inputStream, UpdateTrainingRequest.class);//получение с Json(десер-я)
+                    UpdateTrainingRequest updateRequest = jacksonMapper.readValue(inputStream, UpdateTrainingRequest.class);
                     trainingService.updateTraining(user,updateRequest);
                     success(resp);
                 } else if (requestURI.endsWith(DELETE)) {
-                    DeleteTrainingRequest deleteTrainingRequest = jacksonMapper.readValue(inputStream, DeleteTrainingRequest.class);//получение с Json(десер-я)
+                    DeleteTrainingRequest deleteTrainingRequest = jacksonMapper.readValue(inputStream, DeleteTrainingRequest.class);
                     trainingService.deleteTraining(deleteTrainingRequest.id());
                     success(resp);
                 }

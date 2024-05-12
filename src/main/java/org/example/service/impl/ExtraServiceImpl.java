@@ -1,5 +1,6 @@
 package org.example.service.impl;
 
+import org.example.aop.annotations.Audit;
 import org.example.dao.ExtraDAO;
 import org.example.exception.NotValidParameterException;
 import org.example.in.dto.AddExtraRequest;
@@ -14,7 +15,7 @@ public class ExtraServiceImpl implements ExtraService {
     public ExtraServiceImpl(ExtraDAO extraDAO) {
         this.extraDAO = extraDAO;
     }
-
+    @Audit
     @Override
     public Extra addExtra(AddExtraRequest request) {
         if (request.name == null) {
@@ -25,7 +26,7 @@ public class ExtraServiceImpl implements ExtraService {
         Extra extra = Extra.builder().name(request.getName()).value(request.getValue()).build();
         return extraDAO.save(extra);
     }
-
+    @Audit
     @Override
     public List<Extra> getExtra() {
         return extraDAO.findAll();

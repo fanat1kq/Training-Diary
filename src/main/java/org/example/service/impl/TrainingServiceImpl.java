@@ -1,5 +1,6 @@
 package org.example.service.impl;
 
+import org.example.aop.annotations.Audit;
 import org.example.dao.TrainingDAO;
 import org.example.exception.AlreadyExistException;
 import org.example.exception.NotValidParameterException;
@@ -18,7 +19,7 @@ public class TrainingServiceImpl implements TrainingService {
     public TrainingServiceImpl(TrainingDAO trainingDAO) {
         this.trainingDAO = trainingDAO;
     }
-
+    @Audit
     @Override
     public List<Training> getTraining(int userId, Role role) {
         if (role.equals(Role.ADMIN)) {
@@ -26,7 +27,7 @@ public class TrainingServiceImpl implements TrainingService {
         }
         return trainingDAO.findAllByUserId(userId);
     }
-
+    @Audit
     @Override
     public Training addTraining(AddTrainingRequest request, int userId) {
         if (request.getTime()< 0 | request.getCalorie()<0 | request.getExtraId()<0 | request.getTypeId()<0 | userId<0)
@@ -40,18 +41,18 @@ public class TrainingServiceImpl implements TrainingService {
         }
         return trainingDAO.save(training);
     }
-
+    @Audit
     @Override
     public int getStatistic() {
         return trainingDAO.getStatistic();
     }
-
+    @Audit
     @Override
     public void deleteTraining(int id) {
         if (id < 0) throw new NotValidParameterException("must not be negative.");
         trainingDAO.deleteTraining(id);
     }
-
+//    @Audit
     @Override
     public Training updateTraining(User newUser, UpdateTrainingRequest request) {
         if (request.getTime()< 0 | request.getCalorie()<0 | request.getExtraId()<0 | request.getTypeId()<0 | request.getUserId()<0)

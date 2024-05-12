@@ -1,5 +1,6 @@
 package org.example.service.impl;
 
+import org.example.aop.annotations.Audit;
 import org.example.dao.UserDAO;
 import org.example.exception.AuthorizeException;
 import org.example.exception.RegisterException;
@@ -19,7 +20,7 @@ public class SecurityServiceImpl implements SecurityService {
         this.userDAO = userDAO;
         this.tokenProvider = tokenProvider;
     }
-
+    @Audit
     @Override
     public JwtResponse authorization(User user) {
         String accessToken = tokenProvider.createAccessToken(user.login);
@@ -31,7 +32,7 @@ public class SecurityServiceImpl implements SecurityService {
         }
         return new JwtResponse(user.login, accessToken, refreshToken);
     }
-
+    @Audit
     @Override
     public User register(User user) {
         User userByName = userDAO.findByLogin(user.getLogin());
