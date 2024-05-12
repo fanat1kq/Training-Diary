@@ -26,13 +26,18 @@ Unit-тестирование
 
 # Технологии
 
-Java core
-
-JUnit
-
-Maven
-
+Java 16
+Jakarta EE
+Tomcat 10
+База данных PostreSQL
+Миграция данных при помощи Liquibase
+JWT
 Lombok
+Mapstruct
+JUnit 5
+Testcontainers
+Aspectj
+Docker
 
 ## Запуск приложения
 
@@ -42,14 +47,7 @@ Lombok
 
 ## API Endpoints
 
-- `POST /auth/sign-up`: Регистрация нового пользователя.
-```json
-{
-  "login": "login",
-  "password": "password"
-}
-```
-- `POST /registration`: Авторизация пользователя.
+- `POST /registration`: Регистрация нового пользователя.
 ```json
 {
   "login": "login",
@@ -57,23 +55,39 @@ Lombok
   "role": "role"
 }
 ```
-
-- `GET /training/history`: Получение всех показаний счетчиков.
-- `GET /training/calorie`: Получение актуальных показаний счетчиков.
-- `POST /training/add`: Подача новых показаний счетчика.
-- - `POST /training/delete`: Подача новых показаний счетчика.
-  - - `POST /training/update`: Подача новых показаний счетчика.
+- `POST /login`: Авторизация пользователя.
 ```json
 {
-  "counterNumber": 192101,
-  "meterTypeId": 1
+  "login": "login",
+  "password": "password"
 }
 ```
-- `GET /meter-reading/date`: Получение показаний счетчика по определенному сроку.
+
+- `GET /training/history`: Получение истории тренировок.
+- `GET /training/calorie`: Получение статистика калорий за последние 3 месяца.
+- `POST /training/add`: Запись новой тренировки.
 ```json
 {
-  "month": 1,
-  "year": 2024
+  "time": "1",
+  "calorie": "1",
+  "date": "01/01/2024",
+  "typeId": "1",
+  "extraId": "1"
+}
+- `POST /training/update`: Обновление тренировки по id.
+```json
+{
+  "time": "192101",
+  "calorie": "1",
+  "date": "01/01/2024",
+  "typeId": "1",
+  "extraId": "1"
+}
+```
+- `POST /training/delete`: Удаление тренировки по id.
+```json
+{
+  "id": "1"
 }
 ```
 - `POST /type`: Добавление нового типа тренировки.
@@ -83,4 +97,13 @@ Lombok
   "name": "SOME_NAME"
 }
 ```
+- `POST /extra`: Добавление дополнительной информации тренировки.
+- `GET /extra`: Получение дополнительной информации о тренировке
+```json
+{
+  "name": "SOME_NAME",
+  "value": "123"
+}
+```
+
 
