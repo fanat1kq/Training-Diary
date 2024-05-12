@@ -1,10 +1,14 @@
 package org.example.dao.impl;
 
 import org.example.dao.TrainingTypeDAO;
-import org.example.utils.ConnectionManager;
+import org.example.util.ConnectionManager;
 import org.example.model.Type;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,7 +16,6 @@ import java.util.List;
 
 public class TrainingTypeDAOImpl implements TrainingTypeDAO {
     private final ConnectionManager connectionManager;
-
     public TrainingTypeDAOImpl(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
     }
@@ -85,12 +88,6 @@ public class TrainingTypeDAOImpl implements TrainingTypeDAO {
         } catch (Exception e) {
             throw new RuntimeException("Failed to save meter type", e);
         }
-
-//        if (trainingType.contains(type)) {
-//            throw new AlreadyExistException("Данный тип тренировки уже существует");
-//        }
-//        trainingType.add(type);
-//        return trainingType;
     }
 
     private Type buildTypeTraining(ResultSet resultSet) throws SQLException {

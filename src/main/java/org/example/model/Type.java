@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Type {
-    int id;
-    String typeName;
+    public int id;
+    public String typeName;
 }

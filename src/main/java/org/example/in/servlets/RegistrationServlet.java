@@ -16,7 +16,9 @@ import org.example.service.SecurityService;
 
 import java.io.IOException;
 
-@WebServlet("/registration")
+import static org.example.util.urlPath.REGISTRATION;
+
+@WebServlet(REGISTRATION)
 public class RegistrationServlet extends HttpServlet {
     private SecurityService securityService;
     private ObjectMapper jacksonMapper;
@@ -40,6 +42,13 @@ public class RegistrationServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             jacksonMapper.writeValue(resp.getWriter(), new ExceptionResponse(e.getMessage()));
         }
+    }
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
+    }
+
+    public void setJacksonMapper(ObjectMapper jacksonMapper) {
+        this.jacksonMapper = jacksonMapper;
     }
 
 }

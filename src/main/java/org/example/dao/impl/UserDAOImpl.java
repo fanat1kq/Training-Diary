@@ -1,7 +1,7 @@
 package org.example.dao.impl;
 
 import org.example.dao.UserDAO;
-import org.example.utils.ConnectionManager;
+import org.example.util.ConnectionManager;
 import org.example.model.User;
 import org.example.model.enumerates.Role;
 

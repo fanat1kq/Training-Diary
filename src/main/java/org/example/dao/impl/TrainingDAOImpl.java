@@ -1,17 +1,21 @@
 package org.example.dao.impl;
 
 import org.example.dao.TrainingDAO;
-import org.example.utils.ConnectionManager;
+import org.example.util.ConnectionManager;
 
 import org.example.model.Training;
 import org.example.model.User;
 
 
 import java.sql.Date;
-import java.sql.*;
 import java.time.LocalDate;
-import java.util.*;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 /**
  * Created by fanat1kq on 12/04/2024.
  * implements users, indications
@@ -188,9 +192,6 @@ public class TrainingDAOImpl implements TrainingDAO {
             return Collections.emptyList();
         }
     }
-
-
-
     private Training buildTraining(ResultSet resultSet) throws SQLException {
         return Training.builder()
                 .id(resultSet.getInt("id"))

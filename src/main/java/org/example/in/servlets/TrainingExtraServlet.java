@@ -11,7 +11,10 @@ import org.example.exception.AlreadyExistException;
 import org.example.exception.AuthorizeException;
 import org.example.exception.NotFoundException;
 import org.example.exception.NotValidParameterException;
-import org.example.in.dto.*;
+
+import org.example.in.dto.AddExtraRequest;
+import org.example.in.dto.ExceptionResponse;
+import org.example.in.dto.SuccessResponse;
 import org.example.in.security.Authentication;
 import org.example.model.Extra;
 import org.example.model.User;
@@ -21,7 +24,9 @@ import org.example.service.UserService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/extra")
+import static org.example.util.urlPath.EXTRA;
+
+@WebServlet(EXTRA)
 public class TrainingExtraServlet extends HttpServlet {
     private UserService userService;
     private ExtraService extraService;
@@ -37,7 +42,7 @@ public class TrainingExtraServlet extends HttpServlet {
         Authentication authentication = (Authentication) getServletContext().getAttribute("authentication");
         if (authentication.isAuth()) {
             try {
-                    getExtra(req, resp, authentication);
+                    processGetExtra(req, resp, authentication);
             } catch (NotFoundException | NotValidParameterException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 jacksonMapper.writeValue(resp.getWriter(), new ExceptionResponse(e.getMessage()));
@@ -80,7 +85,7 @@ public class TrainingExtraServlet extends HttpServlet {
             jacksonMapper.writeValue(resp.getWriter(), new ExceptionResponse(authentication.getMessage()));
         }
     }
-    private void getExtra(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws NotValidParameterException, IOException {
+    private void processGetExtra(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws NotValidParameterException, IOException {
         String login = req.getParameter("login");
         if (login == null) throw new NotValidParameterException("Login parameter is null!");
         User entity = userService.getByLogin(login);

@@ -13,19 +13,29 @@ import org.example.dao.impl.ExtraDAOImpl;
 import org.example.dao.impl.TrainingDAOImpl;
 import org.example.dao.impl.TrainingTypeDAOImpl;
 import org.example.dao.impl.UserDAOImpl;
-import org.example.utils.ConnectionManager;
+import org.example.service.ExtraService;
+import org.example.service.SecurityService;
+import org.example.service.TrainingService;
+import org.example.service.TypeService;
+import org.example.service.UserService;
+import org.example.service.impl.ExtraServiceImpl;
+import org.example.service.impl.SecurityServiceImpl;
+import org.example.service.impl.TrainingServiceImpl;
+import org.example.service.impl.TypeServiceImpl;
+import org.example.service.impl.UserServiceImpl;
+import org.example.util.ConnectionManager;
 import org.example.in.mappers.TrainingMapper;
 import org.example.in.mappers.UserMapper;
 import org.example.in.security.JwtTokenProvider;
 import org.example.liquibase.Liquibase;
-import org.example.service.*;
-import org.example.service.impl.*;
+
+
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-@WebListener//для добавление аттрибутов в контекст сервлетов
+@WebListener
     public class ApplicationContextListener implements ServletContextListener {
 
     private Properties properties;
@@ -45,7 +55,6 @@ import java.util.Properties;
         servletContext.setAttribute("userMapper", UserMapper.INSTANCE);
         servletContext.setAttribute("trainingMapper", TrainingMapper.INSTANCE);
     }
-    //1 для окончания
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {

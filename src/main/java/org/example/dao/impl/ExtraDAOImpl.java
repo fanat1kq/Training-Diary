@@ -1,10 +1,15 @@
 package org.example.dao.impl;
 
 import org.example.dao.ExtraDAO;
-import org.example.utils.ConnectionManager;
+import org.example.util.ConnectionManager;
 import org.example.model.Extra;
 
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

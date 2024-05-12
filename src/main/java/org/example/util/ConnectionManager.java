@@ -1,4 +1,4 @@
-package org.example.utils;
+package org.example.util;
 
 import lombok.AllArgsConstructor;
 
@@ -28,9 +28,7 @@ public class ConnectionManager {
         try {
             Class.forName("org.postgresql.Driver");
             return DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

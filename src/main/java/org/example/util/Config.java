@@ -1,4 +1,4 @@
-package org.example.utils;
+package org.example.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +20,6 @@ public class Config {
             e.printStackTrace();
         }
     }
-
 
     /**
      *

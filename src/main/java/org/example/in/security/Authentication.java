@@ -1,9 +1,6 @@
 package org.example.in.security;
 
-
 import java.util.Objects;
-
-
 
 public class Authentication {
     private String login;
@@ -18,7 +15,6 @@ public class Authentication {
         this.isAuth = isAuth;
         this.message = message;
     }
-
     @Override
     public String toString() {
         return "Authentication{" +

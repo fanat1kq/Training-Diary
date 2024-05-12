@@ -11,7 +11,9 @@ import org.example.exception.AlreadyExistException;
 import org.example.exception.AuthorizeException;
 import org.example.exception.NotFoundException;
 import org.example.exception.NotValidParameterException;
-import org.example.in.dto.*;
+import org.example.in.dto.AddTypeRequest;
+import org.example.in.dto.ExceptionResponse;
+import org.example.in.dto.SuccessResponse;
 import org.example.in.security.Authentication;
 import org.example.model.Type;
 import org.example.model.User;
@@ -21,7 +23,9 @@ import org.example.service.UserService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/type")
+import static org.example.util.urlPath.TYPE;
+
+@WebServlet(TYPE)
 public class TrainingTypeServlet extends HttpServlet {
 
     private UserService userService;
@@ -41,7 +45,7 @@ public class TrainingTypeServlet extends HttpServlet {
         if (authentication.isAuth()) {
             try {
                 loginValidation(req,authentication);
-                getTypes(resp);
+                processGetTypes(resp);
             } catch (NotFoundException | NotValidParameterException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 jacksonMapper.writeValue(resp.getWriter(), new ExceptionResponse(e.getMessage()));
@@ -84,7 +88,7 @@ public class TrainingTypeServlet extends HttpServlet {
             jacksonMapper.writeValue(resp.getWriter(), new ExceptionResponse(authentication.getMessage()));
         }
     }
-    private void getTypes(HttpServletResponse resp) throws NotValidParameterException, IOException {
+    private void processGetTypes(HttpServletResponse resp) throws NotValidParameterException, IOException {
         List<Type> typeHistory = typeService.getAllType();
         resp.setStatus(HttpServletResponse.SC_OK);
         jacksonMapper.writeValue(resp.getWriter(), typeHistory);

@@ -13,10 +13,9 @@ public class JwtTokenFilter implements Filter {
     private ServletContext servletContext;
     @Override
     public void init(FilterConfig filterConfig){
-        this.servletContext = filterConfig.getServletContext();//для доступа к аттрибутам
-        jwtTokenProvider = (JwtTokenProvider) servletContext.getAttribute("tokenProvider");//получаем аттрибут
+        this.servletContext = filterConfig.getServletContext();
+        jwtTokenProvider = (JwtTokenProvider) servletContext.getAttribute("tokenProvider");
     }
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String bearerToken = ((HttpServletRequest)servletRequest).getHeader("Authorization");
