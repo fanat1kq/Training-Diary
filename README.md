@@ -89,7 +89,7 @@ Docker
 - `POST /training/update`: Обновление тренировки по id.
 ```json
 {
-  "time": "192101",
+  "time": "1",
   "calorie": "1",
   "date": "01/01/2024",
   "typeId": "1",
