@@ -27,16 +27,27 @@ Unit-тестирование
 # Технологии
 
 Java 16
+
 Jakarta EE
+
 Tomcat 10
+
 База данных PostreSQL
+
 Миграция данных при помощи Liquibase
+
 JWT
+
 Lombok
+
 Mapstruct
+
 JUnit 5
+
 Testcontainers
+
 Aspectj
+
 Docker
 
 ## Запуск приложения
@@ -74,6 +85,7 @@ Docker
   "typeId": "1",
   "extraId": "1"
 }
+```
 - `POST /training/update`: Обновление тренировки по id.
 ```json
 {
