@@ -12,6 +12,6 @@ import javax.validation.constraints.NotNull;
  */
 //проверка на нал при входе
 public record SecurityRequestAuth(@NotNull(message = "Login must be not null.") String login,
-                                  @NotNull(message = "Password must be not null.") String password,
-                                  @NotNull(message = "Password must be not null.") Role role) {
+                                  @NotNull(message = "Password must be not null.") String password
+                                 ) {
 }

@@ -7,7 +7,7 @@ import org.example.exception.RegisterException;
 import org.example.in.dto.JwtResponse;
 import org.example.in.security.JwtTokenProvider;
 import org.example.model.Users;
-import org.example.repository.UserRepository;
+import org.example.repository.UsersRepository;
 import org.example.service.SecurityService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +17,7 @@ import java.nio.file.AccessDeniedException;
 @Service
 @RequiredArgsConstructor
 public class SecurityServiceImpl implements SecurityService {
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
     private final JwtTokenProvider tokenProvider;
     @Transactional
     @Audit
@@ -36,11 +36,11 @@ public class SecurityServiceImpl implements SecurityService {
     @Audit
     @Override
     public Users register(Users users) {
-        Users usersByName = userRepository.findByLogin(users.getLogin());
+        Users usersByName = usersRepository.findByLogin(users.getLogin());
         if (usersByName !=null) {
             throw new RegisterException("Такой пользователь уже существует");
         }
-    return userRepository.save(users);
+    return usersRepository.save(users);
     }
 
 

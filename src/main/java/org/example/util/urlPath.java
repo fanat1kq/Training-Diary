@@ -11,5 +11,6 @@ public class urlPath {
     public static final String REGISTRATION = "/registration";
     public static final String EXTRA = "/extra";
     public static final String TYPE = "/type";
+    public static final String AUTH = "/auth";
 
 }

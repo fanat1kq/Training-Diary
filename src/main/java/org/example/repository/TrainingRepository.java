@@ -19,10 +19,10 @@ public interface TrainingRepository extends JpaRepository<Training, Integer> {
      * @return the player's list of transactions
      */
     List<Training> findAllByUserId(int userId);
-    Training findAllByDate(LocalDate date, int typeId);
+    Training findAllByDateAndId(LocalDate date, int typeId);
 
     void deleteById(int id);
 
-    Training updateById(Users users, Training training);
+//    Training updateById(Users users, Training training);
 }
 

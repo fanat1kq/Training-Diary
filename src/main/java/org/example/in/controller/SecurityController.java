@@ -21,15 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import static org.example.util.urlPath.LOGIN;
-import static org.example.util.urlPath.REGISTRATION;
+import static org.example.util.urlPath.*;
 
 /**
  * The security controller
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(LOGIN)
+@RequestMapping(AUTH)
 @Validated
 @Api(value = "SecurityController" , tags = {"Security Controller"})
 @SwaggerDefinition(tags = {

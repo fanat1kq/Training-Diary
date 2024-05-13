@@ -3,7 +3,7 @@ package org.example.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.example.exception.AuthorizeException;
 import org.example.model.Users;
-import org.example.repository.UserRepository;
+import org.example.repository.UsersRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,7 +21,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRepository playerDAO;
+    private final UsersRepository playerDAO;
 
 
     /**
@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Users users = playerDAO.findByLogin(username);
         if (users == null) {
-            throw new AuthorizeException("There is no player with this login in the database.");
+            throw new AuthorizeException("There is no users with this login in the database.");
         }
         return new User(
                 users.getLogin(),

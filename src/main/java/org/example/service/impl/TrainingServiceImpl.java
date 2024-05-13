@@ -37,7 +37,7 @@ public class TrainingServiceImpl implements TrainingService {
         Training training = Training.builder().time(request.getTime()).calorie(request.getCalorie()).
                 date(request.getDate()).extraId(request.getExtraId()).typeId(request.getTypeId()).
                 userId(userId).build();
-        Training trainingByDate = trainingRepository.findAllByDate(training.getDate(), training.getTypeId());
+        Training trainingByDate = trainingRepository.findAllByDateAndId(training.getDate(), training.getTypeId());
         if (trainingByDate!=null){
             throw new AlreadyExistException("Тренировка в этот день уже записана");
         }
@@ -67,6 +67,7 @@ public class TrainingServiceImpl implements TrainingService {
                 time(request.getTime()).calorie(request.getCalorie()).
                 date(request.getDate()).extraId(request.getExtraId()).
                 typeId(request.getTypeId()).userId(request.getId()).build();
-        return trainingRepository.updateById(newUsers,newTraining);
+//        return trainingRepository.updateById(newUsers,newTraining);
+        return newTraining;
     }
 }
